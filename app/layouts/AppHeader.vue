@@ -7,44 +7,61 @@
     <div class="searchBar">
       <input type="text" class="search" placeholder="Szukaj ..." />
     </div>
-    <div class="menu">
+
+    <div class="menu" ref="menuItems">
       <div class="menu-button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 100 100"
+          @click="menu = !menu"
+        >
           <line
-            x1="33"
-            y1="0"
-            x2="33"
-            y2="100"
+            x1="0"
+            y1="10"
+            x2="100"
+            y2="10"
             stroke="black"
-            stroke-width="2"
+            stroke-width="10"
           ></line>
           <line
-            x1="66"
-            y1="0"
-            x2="66"
-            y2="100"
+            x1="0"
+            y1="45"
+            x2="100"
+            y2="45"
             stroke="black"
-            stroke-width="2"
+            stroke-width="10"
           ></line>
           <line
-            x1="99"
-            y1="0"
-            x2="99"
-            y2="100"
+            x1="0"
+            y1="80"
+            x2="100"
+            y2="80"
             stroke="black"
-            stroke-width="2"
+            stroke-width="10"
           ></line>
         </svg>
       </div>
-      <div class="item">Import danych</div>
-      <div class="item">Export danych</div>
-      <div class="item">Ustawienia</div>
-      <div class="item">O GenTree</div>
+      <div class="menu-items" v-if="menu">
+        <div class="item">Import danych</div>
+        <div class="item">Export danych</div>
+        <div class="item">Ustawienia</div>
+        <div class="item">O GenTree</div>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const menu = ref(false)
+  const menuItems: Ref<null | HTMLDivElement> = ref(null)
+
+  onMounted(() => {
+    document.body.addEventListener('click', (e: MouseEvent) => {
+      if (!menuItems.value?.contains(e.target as Node | null))
+        menu.value = false
+    })
+  })
+</script>
 
 <style scoped lang="less">
   div.header {
@@ -87,9 +104,46 @@
     }
     .menu {
       position: relative;
+      height: 100%;
 
-      .item {
-        display: none;
+      .menu-button {
+        align-items: center;
+        justify-content: center;
+        display: grid;
+        height: 100%;
+        width: 100%;
+
+        > svg {
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+        }
+      }
+      .menu-items {
+        position: absolute;
+        top: 100%;
+        left: -100%;
+        transform: translate(10%, 0%);
+        background-color: rgba(0, 0, 0, 0.809);
+        width: 150%;
+        border-radius: 15px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .item {
+          background-color: rgb(72, 72, 72);
+          color: white;
+          padding: 5px;
+          border-radius: 25px;
+          text-align: center;
+          cursor: pointer;
+
+          &:hover {
+            background-color: rgb(116, 116, 116);
+          }
+        }
       }
     }
   }
