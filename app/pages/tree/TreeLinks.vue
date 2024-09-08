@@ -13,7 +13,7 @@
 <script setup lang="ts">
   import type { HierarchyPointNode, HierarchyPointLink } from 'd3-hierarchy'
   import * as d3 from 'd3'
-  import type { FamilyNode } from './index.vue'
+  import type { FamilyNode } from '../index.vue'
 
   // Define the props the component will receive
   const props = defineProps<{

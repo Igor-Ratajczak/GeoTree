@@ -68,8 +68,8 @@
 
 <script setup lang="ts">
   import type { HierarchyPointNode } from 'd3'
-  import type { FamilyNode } from './index.vue'
-  import { state } from './state'
+  import type { FamilyNode } from '../index.vue'
+  import { state } from '../state'
 
   defineProps<{
     x: number

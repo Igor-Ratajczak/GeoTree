@@ -58,8 +58,8 @@
 <script setup lang="ts">
   import PersonOption from './PersonOption.vue'
   import AddText from './AddText.vue'
-  import { type FamilyNode } from './index.vue'
-  import { state } from './state'
+  import { type FamilyNode } from './CreateTree.vue'
+  import { state } from '../state'
 
   // Define the props the component will receive
   const props = defineProps<{

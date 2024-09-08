@@ -5,10 +5,15 @@
     :data-x="rectX"
     :data-width="rectWidth"
   >
-    <g class="add_person" :transform="`translate(${-50},${2})`">
+    <g
+      class="add_person"
+      :transform="`translate(${-50},${2})`"
+      @click="state.window = 'person_add'"
+    >
       <rect width="50" height="50"></rect>
       <text :x="50 / 2" :y="50 / 2 + 4" dominant-baseline="middle">+</text>
     </g>
+
     <g class="add_person" :transform="`translate(${0},${2})`">
       <rect width="50" height="50"></rect>
       <text :x="50 / 2" :y="50 / 2 + 4" dominant-baseline="middle">+</text>
@@ -21,6 +26,8 @@
 </template>
 
 <script setup lang="ts">
+  import { state } from '../state'
+
   defineProps<{
     rectX: number
     rectWidth: number

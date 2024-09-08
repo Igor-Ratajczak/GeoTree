@@ -1,150 +1,36 @@
 <template>
-  <div id="tree-container" ref="containerRef">
-    <svg ref="svgRef">
-      <g ref="gRef">
-        <Transition>
-          <TreeLinks v-if="treeData" :node="treeData" />
-        </Transition>
-        <Transition>
-          <TreeNode v-if="treeData" :node="treeData" />
-        </Transition>
-      </g>
-    </svg>
+  <div id="root">
+    <CreateTree />
+    <Transition>
+      <div v-if="state.window === 'person_add'" id="addPerson" class="window">
+        <div class="title">Dodaj osobę</div>
+        <div class="close" @click="state.window = null">X</div>
+        <addPerson />
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
-  import * as d3 from 'd3'
-  import { hierarchy, tree } from 'd3-hierarchy'
-  import TreeLinks from './TreeLinks.vue'
-  import TreeNode from './TreeNode.vue'
+  import CreateTree from './tree/CreateTree.vue'
+  import addPerson from './window/addPerson.vue'
+  import { state } from './state'
 
-  export type FamilyNode = {
-    id: number
-    name: string
-    birth: number
-    death?: number
-    about: string
-    spouse: string
-    spouse_birth?: number
-    spouse_death?: number
-    children?: FamilyNode[]
+  // Function to close the modal when the Esc key is pressed
+  const handleEsc = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && state.value.window !== null) {
+      state.value.window = null // Close the modal if it's open
+    }
   }
 
-  const containerRef = ref<HTMLDivElement | null>(null)
-  const svgRef = ref<SVGSVGElement | null>(null)
-  const gRef = ref<SVGGElement | null>(null)
-  const treeData = ref<d3.HierarchyPointNode<FamilyNode> | null>(null)
-
+  // Add the Esc key listener when the component is mounted
   onMounted(() => {
-    const family: FamilyNode = {
-      id: 1,
-      name: 'Joanna Malczewska',
-      birth: 1950,
-      death: 1950,
-      about: 'a great family',
-      spouse: 'Kapusta Malczewski',
-      spouse_birth: 1950,
-      spouse_death: 1950,
-      children: [
-        {
-          id: 2,
-          name: 'child #1',
-          birth: 1950,
-          death: 1950,
-          about: 'a great family',
-          spouse: 'family?',
-          children: [
-            {
-              id: 3,
-              name: 'grandchild #1',
-              birth: 1950,
-              death: 1950,
-              about: 'a great family',
-              spouse: 'family?',
-              children: [
-                {
-                  id: 4,
-                  name: 'grandchild #3',
-                  birth: 1950,
-                  death: 1950,
-                  about: 'a great family',
-                  spouse: 'family?',
-                },
-              ],
-            },
-            {
-              id: 5,
-              name: 'grandchild #2',
-              birth: 1950,
-              death: 1950,
-              about: 'a great family',
-              spouse: '',
-            },
-          ],
-        },
-        {
-          id: 6,
-          name: 'child #2',
-          birth: 1950,
-          death: 1950,
-          about: 'a great family',
-          spouse: 'family?',
-          children: [
-            {
-              id: 7,
-              name: 'grandchild #1',
-              birth: 1950,
-              death: 1950,
-              about: 'a great family',
-              spouse: 'family?',
-            },
-            {
-              id: 8,
-              name: 'grandchild #2',
-              birth: 1950,
-              about: 'a great family',
-              spouse: 'family?',
-            },
-            {
-              id: 9,
-              name: 'grandchild #3',
-              birth: 1950,
-              about: 'a great family',
-              spouse: 'family?',
-            },
-          ],
-        },
-      ],
-    }
+    window.addEventListener('keydown', handleEsc)
+  })
 
-    const width = containerRef.value!.clientWidth
-    const height = containerRef.value!.clientHeight
-
-    // Calculate the tree layout
-    const root = hierarchy(family)
-    const treeLayout = tree<FamilyNode>()
-      .size([width, height])
-      .nodeSize([700, 350])
-    treeLayout.separation((a, b) => (a.parent === b.parent ? 1 : 1.2))
-
-    treeLayout(root)
-
-    // Assign the processed data to the reactive treeData variable
-    treeData.value = root
-
-    // Setup D3 zoom
-    const zoom = d3.zoom<SVGSVGElement, unknown>().on('zoom', (e) => {
-      d3.select(gRef.value!).attr('transform', e.transform)
-    })
-
-    d3.select(svgRef.value!)
-      .call(zoom)
-      .call(
-        zoom.transform as any,
-        d3.zoomIdentity.scale(1).translate(width / 2, height / 4)
-      )
+  // Remove the Esc key listener when the component is unmounted
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleEsc)
   })
 </script>
 
