@@ -12,6 +12,10 @@ body {
   color: #333;
   background-color: #f5f5f5;
 }
+svg * {
+  user-select: none;
+}
+
 .window {
   position: fixed;
   top: 0;
@@ -22,6 +26,8 @@ body {
   z-index: 10000;
   display: grid;
   grid-template: 60px auto / auto 60px;
+  overflow: hidden;
+  box-shadow: 0 0 50px 20px rgb(20, 20, 20);
 
   @media screen and (min-width: 768px) {
     width: 40vw;
@@ -31,6 +37,18 @@ body {
     transform: translate(-50%, -50%);
   }
 
+  * {
+    opacity: 0;
+    animation: 1s opacity 1s ease forwards;
+  }
+  @keyframes opacity {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
   .title {
     grid-column: 1 / span 2;
     grid-row: 1;

@@ -12,7 +12,6 @@
         :class="{ active: state.active_person === node.data.id }"
         @click="state.active_person = node.data.id"
       ></rect>
-
       <!-- <image href="/nasa-53884.jpg" :x="rectX" y="0" /> -->
 
       <!-- Person option menu -->
@@ -22,6 +21,7 @@
           :rectX="rectX"
           :rectWidth="rectWidth"
           :rectHeight="rectHeight"
+          :node="node"
         />
       </Transition>
 
@@ -32,6 +32,7 @@
         width="100%"
         height="100%"
         preserveAspectRatio="xMinYMin slice"
+        @click="state.active_person = node.data.id"
       />
       <image
         v-if="node.data.spouse"
@@ -41,6 +42,7 @@
         width="100%"
         height="100%"
         preserveAspectRatio="xMinYMin slice"
+        @click="state.active_person = node.data.id"
       />
       <!-- Add person text name, about, and spouse -->
       <AddText :x="rectX" :node="node"></AddText>
@@ -58,7 +60,6 @@
 <script setup lang="ts">
   import PersonOption from './PersonOption.vue'
   import AddText from './AddText.vue'
-  import { type FamilyNode } from './CreateTree.vue'
   import { state } from '../state'
 
   // Define the props the component will receive

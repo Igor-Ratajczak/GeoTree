@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "d3": "^7.9.0",
-    "nuxt": "^3.13.0",
+    "nuxt": "^3.13.1",
     "vue": "latest"
   },
   "devDependencies": {
