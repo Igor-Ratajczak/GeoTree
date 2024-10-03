@@ -9,15 +9,14 @@
         rx="10"
         ry="10"
         fill="white"
-        :class="{ active: state.active_person === node.data.id }"
-        @click="state.active_person = node.data.id"
+        :class="{ active: state.active_person.value === node.data.id }"
+        @click="state.active_person.value = node.data.id"
       ></rect>
-      <!-- <image href="/nasa-53884.jpg" :x="rectX" y="0" /> -->
 
       <!-- Person option menu -->
       <Transition name="fade">
         <PersonOption
-          v-if="state.active_person === node.data.id"
+          v-if="state.active_person.value === node.data.id"
           :rectX="rectX"
           :rectWidth="rectWidth"
           :rectHeight="rectHeight"
@@ -26,30 +25,29 @@
       </Transition>
 
       <image
-        xlink:href="/nasa-53884.jpg"
+        :xlink:href="icon.person"
         :x="rectX + 10"
         y="15"
         width="100%"
         height="100%"
-        preserveAspectRatio="xMinYMin slice"
-        @click="state.active_person = node.data.id"
+        preserveAspectRatio="xMidYMid slice"
+        @click="state.active_person.value = node.data.id"
       />
       <image
         v-if="node.data.spouse"
-        xlink:href="/nasa-53884.jpg"
+        :xlink:href="icon.spouse"
         :x="rectX + 310"
         y="15"
         width="100%"
         height="100%"
-        preserveAspectRatio="xMinYMin slice"
-        @click="state.active_person = node.data.id"
+        preserveAspectRatio="xMidYMid slice"
+        @click="state.active_person.value = node.data.id"
       />
       <!-- Add person text name, about, and spouse -->
       <AddText :x="rectX" :node="node"></AddText>
     </g>
-
     <!-- Recursively render child nodes -->
-    <TreeNode
+    <CreatePerson
       v-for="child in node.children || []"
       :key="child.data.id"
       :node="child"
@@ -61,6 +59,7 @@
   import PersonOption from './PersonOption.vue'
   import AddText from './AddText.vue'
   import { state } from '../state'
+  import { get } from './idb/manageIDB'
 
   // Define the props the component will receive
   const props = defineProps<{
@@ -71,6 +70,15 @@
   const rectWidth = computed(() => (props.node.data.spouse ? 650 : 400))
   const rectHeight = 150
   const rectX = computed(() => -rectWidth.value / 5)
+
+  const icon = ref({
+    person: '',
+    spouse: '',
+  })
+
+  get(props.node.data.id).then((res: Icon) => {
+    icon.value = res
+  })
 </script>
 
 <style scoped lang="less">

@@ -4,7 +4,7 @@
     :x="x + 150"
     y="30"
     font-size="25"
-    @click="state.active_person = node.data.id"
+    @click="state.active_person.value = node.data.id"
   >
     {{
       node.data.name.length > 12
@@ -17,9 +17,9 @@
     :x="x + 150"
     y="80"
     font-size="20"
-    @click="state.active_person = node.data.id"
+    @click="state.active_person.value = node.data.id"
   >
-    ur. {{ node.data.birth }}
+    ur. {{ node.data.birth !== '' ? node.data.birth : 'nie znana' }}
   </text>
   <text
     v-if="node.data.death !== null"
@@ -27,34 +27,34 @@
     :x="x + 150"
     y="110"
     font-size="20"
-    @click="state.active_person = node.data.id"
+    @click="state.active_person.value = node.data.id"
   >
-    zm. {{ node.data.death }}
+    zm. {{ node.data.death !== '' ? node.data.death : 'nie znana' }}
   </text>
   <text
+    v-if="node.data.spouse !== null"
     class="text"
     :x="x + 440"
     y="30"
     font-size="25"
-    @click="state.active_person = node.data.id"
+    @click="state.active_person.value = node.data.id"
   >
     {{
-      node.data.spouse?.name
-        ? node.data.spouse?.name.length > 12
-          ? node.data.spouse?.name.slice(0, 12) + '...'
-          : node.data.spouse?.name
-        : null
+      node.data.spouse?.name.length > 12
+        ? node.data.spouse?.name.slice(0, 12) + '...'
+        : node.data.spouse?.name
     }}
   </text>
   <text
-    v-if="node.data.spouse?.birth"
+    v-if="node.data.spouse !== null"
     class="text"
     :x="x + 440"
     y="80"
     font-size="20"
-    @click="state.active_person = node.data.id"
+    @click="state.active_person.value = node.data.id"
   >
-    ur. {{ node.data.spouse.birth }}
+    ur.
+    {{ node.data.spouse?.birth !== '' ? node.data.spouse?.birth : 'nie znana' }}
   </text>
   <text
     v-if="node.data.spouse !== null && node.data.spouse.death !== null"
@@ -62,9 +62,10 @@
     :x="x + 440"
     y="110"
     font-size="20"
-    @click="state.active_person = node.data.id"
+    @click="state.active_person.value = node.data.id"
   >
-    zm. {{ node.data.spouse?.death }}
+    zm.
+    {{ node.data.spouse.death !== '' ? node.data.spouse.death : 'nie znana' }}
   </text>
 </template>
 

@@ -2,26 +2,45 @@
 import type { HierarchyPointNode } from 'd3-hierarchy'
 
 declare global {
-  type UserData = {
+  interface UserData {
     name: string
     text: string
   }
-  type SpouseNode = {
+  interface SpouseNode {
     name: string
-    birth: number
-    death: number | null
+    birth: string | null
+    death: string | null
     description: string
     userData: UserData[]
   }
-  type FamilyNode = {
-    id: number
+
+  interface Icon {
+    person: string
+    spouse: string
+  }
+  interface SpouseForm extends SpouseNode {
+    icon: string
+  }
+  interface PersonForm {
+    icon: string
     name: string
-    birth: number
-    death?: number | null
+    birth: string | null
+    death: string | null
     description: string
     userData: UserData[]
+    hasSpouse: boolean
+    spouse: SpouseForm | null
+  }
+  interface FamilyNode {
+    id: number
+    name: string
+    birth: string | null
+    death: string | null
+    description: string
+    userData: UserData[]
+    hasSpouse: boolean
     spouse: SpouseNode | null
-    children?: FamilyNode[]
+    children: FamilyNode[]
   }
   type D3HierarchyPointNode<FamilyNode> = HierarchyPointNode<FamilyNode>
 }

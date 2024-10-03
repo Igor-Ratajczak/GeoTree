@@ -6,7 +6,7 @@
           <TreeLinks v-if="treeData" :node="treeData" />
         </Transition>
         <Transition>
-          <TreeNode v-if="treeData" :node="treeData" />
+          <CreatePerson v-if="treeData" :node="treeData" />
         </Transition>
       </g>
     </svg>
@@ -17,7 +17,7 @@
   import * as d3 from 'd3'
   import { hierarchy, tree } from 'd3-hierarchy'
   import TreeLinks from './TreeLinks.vue'
-  import TreeNode from './TreeNode.vue'
+  import CreatePerson from './CreatePerson.vue'
   import { state } from '../state'
   import { useTemplateRef } from 'vue'
 
@@ -58,15 +58,17 @@
   }
 
   watch(
-    () => state.familyTree,
+    () => state.familyTree.value,
     (newTree) => {
-      createTree(newTree)
+      if (newTree) createTree(newTree)
+      else treeData.value = null
     },
     { deep: true }
   )
   onMounted(() => {
-    const family = state.familyTree
-    createTree(family)
+    const family = state.familyTree.value
+    if (family) createTree(family)
+    else treeData.value = null
   })
 </script>
 

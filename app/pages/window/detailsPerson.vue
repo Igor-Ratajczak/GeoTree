@@ -1,35 +1,58 @@
 <template>
-  <div class="details">
-    <div class="name">{{ data?.name }}</div>
-    <div class="birth">ur. {{ data?.birth }}</div>
-    <div class="death">zm. {{ data?.death }}</div>
-    <div class="description">{{ data?.description }}</div>
-    <div class="user-data" v-if="data?.userData" v-for="data in data?.userData">
-      <div class="name">{{ data?.name }}:</div>
-      <div class="text">{{ data?.text }}</div>
-    </div>
-    <div class="spouse" v-if="data?.spouse">
-      <div class="text">Współmałżonek</div>
-      <div class="name">{{ data?.spouse.name }}</div>
-      <div class="birth">ur. {{ data?.spouse.birth }}</div>
-      <div class="death">zm. {{ data?.spouse.death }}</div>
-      <div class="description">{{ data?.spouse.description }}</div>
-      <div
-        class="user-data"
-        v-if="data?.spouse.userData"
-        v-for="data in data?.spouse.userData"
-      >
-        <div class="name">{{ data?.name }}:</div>
-        <div class="text">{{ data?.text }}</div>
+  <Transition name="window">
+    <div
+      v-if="state.window.value === 'person_details'"
+      id="detailsPerson"
+      class="window"
+    >
+      <div class="title">Dane o osobie</div>
+      <div class="close" @click="state.window.value = null">X</div>
+      <div class="details">
+        <img class="icon" :src="icon" alt="person" />
+        <div class="name">{{ data?.name }}</div>
+        <div class="birth">ur. {{ data?.birth }}</div>
+        <div class="death">zm. {{ data?.death }}</div>
+        <div class="description">
+          {{ data?.description }}
+        </div>
+        <div
+          class="user-data"
+          v-if="data?.userData"
+          v-for="data in data?.userData"
+        >
+          <div class="name">{{ data?.name }}:</div>
+          <div class="text">{{ data?.text }}</div>
+        </div>
+        <div class="spouse" v-if="data?.hasSpouse">
+          <div class="text">Współmałżonek</div>
+          <img class="icon" :src="iconSpouse" alt="spouse" />
+          <div class="name">{{ data?.spouse?.name }}</div>
+          <div class="birth">ur. {{ data?.spouse?.birth }}</div>
+          <div class="death">zm. {{ data?.spouse?.death }}</div>
+          <div class="description">
+            {{ data?.spouse?.description }}
+          </div>
+          <div
+            class="user-data"
+            v-if="data?.spouse?.userData"
+            v-for="data in data?.spouse.userData"
+          >
+            <div class="name">{{ data?.name }}:</div>
+            <div class="text">{{ data?.text }}</div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
   import { state } from '../state'
 
-  const data = ref(state.selectedPersonData)
+  const data = computed(() => state.selectedPersonData.value)
+
+  const icon = computed(() => state.personForm.value?.icon)
+  const iconSpouse = computed(() => state.personForm.value?.spouse?.icon)
 </script>
 
 <style scoped lang="less">
@@ -42,6 +65,13 @@
     padding-top: 2em;
     padding-bottom: 2em;
     overflow: auto;
+
+    .icon {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
     .name {
       font-size: 2.5rem;

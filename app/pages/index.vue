@@ -1,31 +1,10 @@
 <template>
-  <div id="root">
+  <div id="root" v-if="success">
     <CreateTree />
-    <Transition name="window">
-      <div v-if="state.window === 'person_add'" id="addPerson" class="window">
-        <div class="title">Dodaj osobę</div>
-        <div class="close" @click="state.window = null">X</div>
-        <addPerson />
-      </div>
-    </Transition>
-    <Transition name="window">
-      <div
-        v-if="state.window === 'person_details'"
-        id="detailsPerson"
-        class="window"
-      >
-        <div class="title">Dane o osobie</div>
-        <div class="close" @click="state.window = null">X</div>
-        <detailsPerson />
-      </div>
-    </Transition>
-    <Transition name="window">
-      <div v-if="state.window === 'person_edit'" id="editPerson" class="window">
-        <div class="title">Edytuj dane o osobie</div>
-        <div class="close" @click="state.window = null">X</div>
-        <EditPerson />
-      </div>
-    </Transition>
+    <addPerson />
+    <detailsPerson />
+    <EditPerson />
+    <DeletePerson />
   </div>
 </template>
 
@@ -35,11 +14,17 @@
   import { state } from './state'
   import detailsPerson from './window/detailsPerson.vue'
   import EditPerson from './window/editPerson.vue'
+  import DeletePerson from './window/deletePerson.vue'
+  import { set } from './tree/idb/manageIDB'
+  import icon from '/assets/logo.jpg'
+
+  const success = ref(false)
+  const DBDeleteRequest = window.indexedDB.deleteDatabase('toDoList')
 
   // Function to close the modal when the Esc key is pressed
   const handleEsc = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && state.window !== null) {
-      state.window = null // Close the modal if it's open
+      state.window.value = null // Close the modal if it's open
     }
   }
 
@@ -52,6 +37,30 @@
   onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleEsc)
   })
+
+  DBDeleteRequest.onerror = () => {
+    console.error('Error deleting database.')
+  }
+
+  DBDeleteRequest.onsuccess = () => {
+    success.value = true
+    const toDataURL = (url: string | URL | Request) =>
+      fetch(url)
+        .then((response) => response.blob())
+        .then(
+          (blob) =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader()
+              reader.onloadend = () => resolve(reader.result)
+              reader.onerror = reject
+              reader.readAsDataURL(blob)
+            })
+        )
+    toDataURL(icon).then((dataUrl) => {
+      set(0, dataUrl as string, dataUrl as string)
+      set(1, dataUrl as string, '')
+    })
+  }
 </script>
 
 <style scoped lang="less">
