@@ -15,6 +15,7 @@ export class updateTree {
     if (option === 'parent') {
       const family = state.familyTree.value!
       this.data.children.push(family)
+      set(state.numberPeople.value, icons.person, icons.spouse)
       state.familyTree.value = this.data
       state.window.value = null
       state.selectedPersonData.value = null
@@ -28,6 +29,7 @@ export class updateTree {
         hasSpouse: false,
         spouse: null,
       }
+      state.numberPeople.value += 1
     } else if (option === 'child') {
       this.getNode(
         state.familyTree.value!,

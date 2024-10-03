@@ -41,7 +41,11 @@
           ></line>
         </svg>
       </div>
-      <div class="menu-items" v-if="menu">
+      <div
+        class="menu-items"
+        v-if="menu"
+        @click="console.log(state.familyTree.value)"
+      >
         <div class="item">Import danych</div>
         <div class="item">Export danych</div>
         <div class="item">Ustawienia</div>
@@ -52,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+  import { state } from '../pages/state.js'
   const menu = ref(false)
   const menuItems: Ref<null | HTMLDivElement> = ref(null)
 

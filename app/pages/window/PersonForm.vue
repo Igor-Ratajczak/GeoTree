@@ -34,6 +34,7 @@
 <script setup lang="ts">
   import { state } from '../state'
   import { watch } from 'vue'
+  import defaultUserIcon from '/assets/defaultUserIcon.svg'
 
   const props = defineProps<{
     type: 'person' | 'spouse'
@@ -53,7 +54,7 @@
       : state.personForm.value
 
   // TODO: change '' to default icon from fontawesome
-  const icon = ref(props.option === 'edit' ? dataIcon?.icon : '')
+  const icon = ref(props.option === 'edit' ? dataIcon?.icon : defaultUserIcon)
   const name = ref(props.option === 'edit' ? data?.name : '')
   const birth = ref(props.option === 'edit' ? data?.birth : null)
   const death = ref(props.option === 'edit' ? data?.death : null)
@@ -96,7 +97,7 @@
         state.personForm.value = {
           icon: newValue[0] || '',
           name: newValue[1] || '',
-          birth: newValue[2] || '',
+          birth: newValue[2] || null,
           death: newValue[3] || null,
           description: newValue[4] || '',
           userData: newValue[5] as UserData[],
@@ -107,9 +108,8 @@
       if (props.type === 'spouse') {
         state.personForm.value.spouse = {
           icon: newValue[0] || '',
-
           name: newValue[1] || '',
-          birth: newValue[2] || '',
+          birth: newValue[2] || null,
           death: newValue[3] || null,
           description: newValue[4] || '',
           userData: newValue[5] as UserData[],

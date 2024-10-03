@@ -7,9 +7,11 @@
     @click="state.active_person.value = node.data.id"
   >
     {{
-      node.data.name.length > 12
-        ? node.data.name.slice(0, 12) + '...'
-        : node.data.name
+      node.data.name
+        ? node.data.name.length > 12
+          ? node.data.name.slice(0, 12) + '...'
+          : node.data.name
+        : '???'
     }}
   </text>
   <text
@@ -19,7 +21,7 @@
     font-size="20"
     @click="state.active_person.value = node.data.id"
   >
-    ur. {{ node.data.birth !== '' ? node.data.birth : 'nie znana' }}
+    ur. {{ node.data.birth !== null ? node.data.birth : 'nie znana' }}
   </text>
   <text
     v-if="node.data.death !== null"
@@ -32,7 +34,7 @@
     zm. {{ node.data.death !== '' ? node.data.death : 'nie znana' }}
   </text>
   <text
-    v-if="node.data.spouse !== null"
+    v-if="node.data.hasSpouse"
     class="text"
     :x="x + 440"
     y="30"
@@ -40,13 +42,15 @@
     @click="state.active_person.value = node.data.id"
   >
     {{
-      node.data.spouse?.name.length > 12
-        ? node.data.spouse?.name.slice(0, 12) + '...'
-        : node.data.spouse?.name
+      node.data.spouse?.name
+        ? node.data.spouse?.name.length > 12
+          ? node.data.spouse?.name.slice(0, 12) + '...'
+          : node.data.spouse?.name
+        : '???'
     }}
   </text>
   <text
-    v-if="node.data.spouse !== null"
+    v-if="node.data.hasSpouse"
     class="text"
     :x="x + 440"
     y="80"
@@ -54,10 +58,16 @@
     @click="state.active_person.value = node.data.id"
   >
     ur.
-    {{ node.data.spouse?.birth !== '' ? node.data.spouse?.birth : 'nie znana' }}
+    {{
+      node.data.spouse?.birth === null ? 'nie znana' : node.data.spouse?.birth
+    }}
   </text>
   <text
-    v-if="node.data.spouse !== null && node.data.spouse.death !== null"
+    v-if="
+      node.data.hasSpouse === true &&
+      node.data.spouse &&
+      node.data.spouse.death !== null
+    "
     class="text"
     :x="x + 440"
     y="110"
@@ -65,7 +75,7 @@
     @click="state.active_person.value = node.data.id"
   >
     zm.
-    {{ node.data.spouse.death !== '' ? node.data.spouse.death : 'nie znana' }}
+    {{ node.data.spouse?.death !== '' ? node.data.spouse?.death : 'nie znana' }}
   </text>
 </template>
 

@@ -25,7 +25,7 @@
       </Transition>
 
       <image
-        :xlink:href="icon.person"
+        :xlink:href="icon.person === '' ? defaultUserIcon : icon.person"
         :x="rectX + 10"
         y="15"
         width="100%"
@@ -34,8 +34,8 @@
         @click="state.active_person.value = node.data.id"
       />
       <image
-        v-if="node.data.spouse"
-        :xlink:href="icon.spouse"
+        v-if="node.data.hasSpouse"
+        :xlink:href="icon.spouse === '' ? defaultUserIcon : icon.spouse"
         :x="rectX + 310"
         y="15"
         width="100%"
@@ -43,6 +43,7 @@
         preserveAspectRatio="xMidYMid slice"
         @click="state.active_person.value = node.data.id"
       />
+      {{ setIcon(node.data.id) }}
       <!-- Add person text name, about, and spouse -->
       <AddText :x="rectX" :node="node"></AddText>
     </g>
@@ -60,6 +61,7 @@
   import AddText from './AddText.vue'
   import { state } from '../state'
   import { get } from './idb/manageIDB'
+  import defaultUserIcon from '/assets/defaultUserIcon.svg'
 
   // Define the props the component will receive
   const props = defineProps<{
@@ -67,18 +69,19 @@
   }>()
 
   // Rectangle dimensions
-  const rectWidth = computed(() => (props.node.data.spouse ? 650 : 400))
+  const rectWidth = computed(() => (props.node.data.hasSpouse ? 650 : 400))
   const rectHeight = 150
   const rectX = computed(() => -rectWidth.value / 5)
 
   const icon = ref({
-    person: '',
-    spouse: '',
+    person: defaultUserIcon,
+    spouse: defaultUserIcon,
   })
-
-  get(props.node.data.id).then((res: Icon) => {
-    icon.value = res
-  })
+  const setIcon = (id: number) => {
+    get(id).then((res: Icon) => {
+      icon.value = res
+    })
+  }
 </script>
 
 <style scoped lang="less">
