@@ -1,5 +1,4 @@
 interface State {
-  [x: string]: any
   numberPeople: Ref<number>
   deletePersonParentId: Ref<number | null>
   selectedPersonData: Ref<FamilyNode | null>
@@ -8,7 +7,15 @@ interface State {
   hasParent: Ref<boolean | null>
   familyTree: Ref<FamilyNode | null>
   window: Ref<
-    'person_add' | 'person_details' | 'person_edit' | 'person_delete' | null
+    | 'person_add'
+    | 'person_details'
+    | 'person_edit'
+    | 'person_delete'
+    | 'import'
+    | 'export'
+    | 'settings'
+    | 'about'
+    | null
   >
   active_person: Ref<number | null>
 }

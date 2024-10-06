@@ -2462,5 +2462,5 @@
   "explorer.confirmDragAndDrop": false,
   "task.quickOpen.skip": true,
   "svelte.enable-ts-plugin": true,
-  "cSpell.words": ["fontawesome"]
+  "cSpell.words": ["fontawesome", "Fonticons"]
 }

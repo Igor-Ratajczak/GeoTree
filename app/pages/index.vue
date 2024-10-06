@@ -1,10 +1,23 @@
 <template>
   <div id="root" v-if="success">
     <CreateTree />
-    <addPerson />
+    <Transition name="window">
+      <div v-if="state.window.value === 'person_add'" id="addPerson" class="window">
+        <addPerson />
+      </div>
+    </Transition>
     <detailsPerson />
-    <EditPerson />
+    <Transition name="window">
+      <div v-if="state.window.value === 'person_edit'" id="editPerson" class="window">
+        <EditPerson />
+      </div>
+    </Transition>
     <DeletePerson />
+
+    <importData />
+    <exportData />
+    <userSettings />
+    <aboutSite />
   </div>
 </template>
 
@@ -15,6 +28,10 @@
   import detailsPerson from './window/detailsPerson.vue'
   import EditPerson from './window/editPerson.vue'
   import DeletePerson from './window/deletePerson.vue'
+  import importData from './window/importData.vue'
+  import exportData from './window/exportData.vue'
+  import userSettings from './window/userSettings.vue'
+  import aboutSite from './window/aboutSite.vue'
   import { set } from './tree/idb/manageIDB'
   import icon from '/assets/logo.jpg'
 

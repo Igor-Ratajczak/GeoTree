@@ -1,28 +1,15 @@
 <template>
-  <Transition name="window">
-    <div
-      v-if="state.window.value === 'person_edit'"
-      id="editPerson"
-      class="window"
-    >
-      <div class="title">Edytuj dane o osobie</div>
-      <div class="close" @click="state.window.value = null">X</div>
-      <div class="form" v-if="state.selectedPersonData.value">
-        <PersonForm :type="'person'" :option="'edit'" />
-        <div id="spouse" class="checkbox">
-          <input
-            type="checkbox"
-            name="isSpouse"
-            id="isSpouse"
-            v-model="hasSpouse"
-          />
-          <label for="isSpouse">Dodaj współmałżonka</label>
-          <PersonForm v-if="hasSpouse" :type="'spouse'" :option="'edit'" />
-        </div>
-        <button class="add" @click="saveData">Zapisz</button>
-      </div>
+  <div class="title">Edytuj dane o osobie</div>
+  <div class="close" @click="state.window.value = null">X</div>
+  <div class="form" v-if="state.selectedPersonData.value">
+    <PersonForm :type="'person'" :option="'edit'" />
+    <div id="spouse" class="checkbox">
+      <input type="checkbox" name="isSpouse" id="isSpouse" v-model="hasSpouse" />
+      <label for="isSpouse">Dodaj współmałżonka</label>
+      <PersonForm v-if="hasSpouse" :type="'spouse'" :option="'edit'" />
     </div>
-  </Transition>
+    <button class="add" @click="saveData">Zapisz</button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,9 +17,7 @@
   import { updateTree } from '../tree/updateTree'
   import PersonForm from './PersonForm.vue'
 
-  const hasSpouse: Ref<boolean> = ref(
-    state.selectedPersonData.value?.hasSpouse || false
-  )
+  const hasSpouse: Ref<boolean> = ref(state.selectedPersonData.value?.hasSpouse || false)
 
   watch(
     () => state.selectedPersonData,
@@ -49,7 +34,6 @@
     },
     { deep: true }
   )
-
   const saveData = () => {
     const data = {
       name: state.personForm.value?.name,

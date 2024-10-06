@@ -93,6 +93,8 @@
   watch(
     [icon, name, birth, death, description, userData],
     (newValue) => {
+      console.log(state.personForm.value.hasSpouse)
+
       if (props.type === 'person') {
         state.personForm.value = {
           icon: newValue[0] || '',

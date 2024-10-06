@@ -42,23 +42,15 @@
       "
     >
       <rect width="50" height="50"></rect>
-      <text
-        class="delete"
-        :x="50 / 2"
-        :y="50 / 2 + 4"
-        dominant-baseline="middle"
-        stroke="red"
-        stroke-width="2"
-        >X</text
-      >
+      <DeleteIcon />
     </g>
   </g>
 </template>
 
 <script setup lang="ts">
-  import type { HierarchyPointNode } from 'd3'
   import { state } from '../state'
   import AboutIcon from './icons/aboutIcon.vue'
+  import DeleteIcon from './icons/deleteIcon.vue'
   import EditIcon from './icons/editIcon.vue'
   import { get } from './idb/manageIDB'
 
@@ -66,7 +58,7 @@
     rectX: number
     rectWidth: number
     rectHeight: number
-    node: HierarchyPointNode<FamilyNode>
+    node: D3HierarchyPointNode<FamilyNode>
   }>()
 
   const add = () => {

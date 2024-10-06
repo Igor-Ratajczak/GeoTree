@@ -1,55 +1,24 @@
 <template>
-  <Transition name="window">
+  <div class="title">Dodaj osobę</div>
+  <div class="close" @click="close">X</div>
+  <Transition name="to-left">
     <div
-      v-if="state.window.value === 'person_add'"
-      id="addPerson"
-      class="window"
+      class="add-option-person"
+      v-if="state.hasParent.value === false && optionSelected === false"
     >
-      <div class="title">Dodaj osobę</div>
-      <div class="close" @click="close">X</div>
-      <div
-        class="add-option-person"
-        v-if="state.hasParent.value === false && optionSelected === false"
-      >
-        <div
-          class="option"
-          @click="
-            () => {
-              optionSelected = true
-              option = 'parent'
-            }
-          "
-        >
-          Dodaj rodziców
-        </div>
-        <div
-          class="option"
-          @click="
-            () => {
-              optionSelected = true
-              option = 'child'
-            }
-          "
-        >
-          Dodaj dziecko
-        </div>
-      </div>
-      <div class="form" v-if="optionSelected">
-        <PersonForm :type="'person'" :option="'add'" />
-        <div id="spouse" class="checkbox">
-          <input
-            type="checkbox"
-            name="isSpouse"
-            id="isSpouse"
-            v-model="hasSpouse"
-          />
-          <label for="isSpouse">Dodaj współmałżonka</label>
-          <PersonForm v-if="hasSpouse" :type="'spouse'" :option="'add'" />
-        </div>
-        <button class="add" @click="addPerson">Dodaj nową osobę</button>
-      </div>
+      <div class="option" @click="setOption('parent')">Dodaj rodziców</div>
+      <div class="option" @click="setOption('child')">Dodaj dziecko</div>
     </div>
   </Transition>
+  <div class="form" v-if="optionSelected">
+    <PersonForm :type="'person'" :option="'add'" />
+    <div id="spouse" class="checkbox">
+      <input type="checkbox" name="isSpouse" id="isSpouse" v-model="hasSpouse" />
+      <label for="isSpouse">Dodaj współmałżonka</label>
+      <PersonForm v-if="hasSpouse" :type="'spouse'" :option="'add'" />
+    </div>
+    <button class="add" @click="addPerson">Dodaj nową osobę</button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -65,6 +34,12 @@
     state.personForm.value.hasSpouse = newValue
   })
 
+  const setOption = (val: 'parent' | 'child') => {
+    if (val === 'parent') hasSpouse.value = true
+    option.value = val
+    optionSelected.value = true
+  }
+
   const close = () => {
     state.window.value = null
     optionSelected.value = false
@@ -72,9 +47,6 @@
   }
 
   const addPerson = () => {
-    optionSelected.value = false
-    hasSpouse.value = false
-
     const newChild = {
       name: state.personForm.value?.name,
       birth: state.personForm.value?.birth,
@@ -93,10 +65,61 @@
     }
 
     new updateTree(newChild).add(icons, option.value)
+
+    optionSelected.value = false
+    hasSpouse.value = false
+    option.value = null
   }
 </script>
 
 <style scoped lang="less">
+  .to-left-enter-active,
+  .to-left-leave-active {
+    transform: translate(-50%, -50%) !important;
+    transition: all 1s ease;
+  }
+
+  .to-left-enter-from {
+    transform: translate(-50%, -50%) !important;
+  }
+  .to-left-leave-to {
+    transform: translate(-200%, -50%) !important;
+  }
+
+  .add-option-person {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    gap: 2em;
+    grid-column: 1/3;
+
+    .option {
+      width: 100%;
+      height: 3em;
+      padding: 1em 6em;
+      font-size: 1.5rem;
+      border-radius: 25px;
+      border: none;
+      color: black;
+      outline: 5px solid black;
+      font-weight: 900;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        outline: 5px solid black;
+        transform: scale(1.1);
+      }
+    }
+  }
   button {
     width: 80%;
     height: 3em;

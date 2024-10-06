@@ -33,9 +33,7 @@ export class updateTree {
     } else if (option === 'child') {
       this.getNode(
         state.familyTree.value!,
-        state.selectedPersonData?.value?.id
-          ? state.selectedPersonData?.value?.id
-          : 0
+        state.selectedPersonData?.value?.id ? state.selectedPersonData?.value?.id : 0
       ).then((node) => {
         if (!node) return
         set(state.numberPeople.value, icons.person, icons.spouse)
@@ -46,11 +44,11 @@ export class updateTree {
   }
   public save(icons: Icon) {
     // Edit the person in the family tree
+
+    set(state.selectedPersonData.value?.id, icons.person, icons.spouse)
     this.getNode(
       state.familyTree.value!,
-      state.selectedPersonData?.value?.id
-        ? state.selectedPersonData?.value?.id
-        : 0
+      state.selectedPersonData?.value?.id ? state.selectedPersonData?.value?.id : 0
     ).then((node) => {
       if (!node) return
       node.name = this.data.name
@@ -88,10 +86,7 @@ export class updateTree {
       }
     }
   }
-  private getNode(
-    node: FamilyNode,
-    targetId: number
-  ): Promise<FamilyNode | null> {
+  private getNode(node: FamilyNode, targetId: number): Promise<FamilyNode | null> {
     return new Promise((resolve, reject) => {
       if (!node) return resolve(null)
 
