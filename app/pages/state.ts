@@ -1,11 +1,12 @@
-interface State {
+export interface State {
   numberPeople: Ref<number>
-  deletePersonParentId: Ref<number | null>
+  deletePersonParentId: Ref<string | null>
   selectedPersonData: Ref<FamilyNode | null>
   personForm: Ref<PersonForm>
   addOptionPerson: Ref<'parent' | 'child' | null>
   hasParent: Ref<boolean | null>
-  familyTree: Ref<FamilyNode | null>
+  AllFamilies: Ref<Array<Family | null>>
+  selectedFamily: Ref<number>
   window: Ref<
     | 'person_add'
     | 'person_details'
@@ -18,6 +19,15 @@ interface State {
     | null
   >
   active_person: Ref<number | null>
+  settings: Ref<
+    | [
+        {
+          name: string
+          value: string
+        }
+      ]
+    | null
+  >
 }
 
 export const state: State = {
@@ -36,35 +46,13 @@ export const state: State = {
     hasSpouse: false,
     spouse: null,
   }),
-  familyTree: ref({
-    id: 0,
-    icon: '1',
-    name: 'Joanna Malczewska',
-    birth: '1950',
-    death: '1950',
-    description:
-      'a great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great person',
-    userData: [
-      {
-        name: 'Nazwisko rodowe',
-        text: 'Raciborska',
-      },
-    ],
-    hasSpouse: true,
-    spouse: {
-      icon: '2',
-      name: 'Kapusta Malczewski',
-      birth: '1950',
-      death: '1950',
-      description:
-        'a great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great person',
-      userData: [],
-    },
-    children: [
-      {
-        id: 1,
-        icon: '3',
-        name: 'Anna Malczewska',
+  AllFamilies: ref([
+    {
+      name: 'test',
+      family: {
+        id: 'f7c0a496-e445-4f1c-930e-c6153f84359c-1728489705256',
+        icon: 'f7c0a496-e445-4f1c-930e-c6153f84359c-1728489705256-photo',
+        name: 'Joanna Malczewska',
         birth: '1950',
         death: '1950',
         description:
@@ -75,12 +63,40 @@ export const state: State = {
             text: 'Raciborska',
           },
         ],
-        hasSpouse: false,
-        spouse: null,
-        children: [],
+        hasSpouse: true,
+        spouse: {
+          name: 'Kapusta Malczewski',
+          birth: '1950',
+          death: '1950',
+          description:
+            'a great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great person',
+          userData: [],
+        },
+        children: [
+          {
+            id: '305d61c8-27ce-46b0-a193-19e2f35b027c-1728491651735',
+            icon: '305d61c8-27ce-46b0-a193-19e2f35b027c-1728491651735-photo',
+            name: 'Anna Malczewska',
+            birth: '1950',
+            death: '1950',
+            description:
+              'a great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great persona great person',
+            userData: [
+              {
+                name: 'Nazwisko rodowe',
+                text: 'Raciborska',
+              },
+            ],
+            hasSpouse: false,
+            spouse: null,
+            children: [],
+          },
+        ],
       },
-    ],
-  }),
+    },
+  ]),
+  selectedFamily: ref(0),
   window: ref(null),
   active_person: ref(null),
+  settings: ref(null),
 }

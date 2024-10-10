@@ -1,26 +1,21 @@
 <template>
   <div class="management_person">
     <img :src="icon" alt="person" />
-    <input
-      type="file"
-      id="profile_pic"
-      name="profile_pic"
-      accept=".jpg, .jpeg, .png"
-      @change="onFileChange"
-    />
-    <input
-      type="text"
-      class="name"
-      placeholder="Imię i Nazwisko"
-      v-model="name"
-    />
+    <div class="upload-file">
+      <button @click="input?.click()">{{ text }}</button>
+      <input
+        ref="photo"
+        type="file"
+        name="photo"
+        id="photo"
+        accept=".jpg, .jpeg, .png"
+        @change="onFileChange"
+      />
+    </div>
+    <input type="text" class="name" placeholder="Imię i Nazwisko" v-model="name" />
     <input type="text" class="birth" placeholder="ur." v-model="birth" />
     <input type="text" class="death" placeholder="zm." v-model="death" />
-    <textarea
-      class="description"
-      placeholder="opis"
-      v-model="description"
-    ></textarea>
+    <textarea class="description" placeholder="opis" v-model="description"></textarea>
     <div class="user-data">
       <div v-for="(item, index) in userData" :key="index" class="new-user-data">
         <input type="text" placeholder="Nazwa" v-model="item.name" />
@@ -36,6 +31,9 @@
   import { watch } from 'vue'
   import defaultUserIcon from '/assets/defaultUserIcon.svg'
 
+  const input = useTemplateRef('photo')
+  const text = ref('Wybierz plik.')
+
   const props = defineProps<{
     type: 'person' | 'spouse'
     option: string
@@ -43,15 +41,9 @@
 
   const selectedPersonData = state.selectedPersonData
 
-  const data =
-    props.type === 'spouse'
-      ? selectedPersonData.value?.spouse
-      : selectedPersonData.value
+  const data = props.type === 'spouse' ? selectedPersonData.value?.spouse : selectedPersonData.value
 
-  const dataIcon =
-    props.type === 'spouse'
-      ? state.personForm.value?.spouse
-      : state.personForm.value
+  const dataIcon = props.type === 'spouse' ? state.personForm.value?.spouse : state.personForm.value
 
   // TODO: change '' to default icon from fontawesome
   const icon = ref(props.option === 'edit' ? dataIcon?.icon : defaultUserIcon)
@@ -69,6 +61,7 @@
     const target = e.target as HTMLInputElement
     const file = target.files?.[0]
     if (!file) return
+    text.value = file.name
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = (e) => {

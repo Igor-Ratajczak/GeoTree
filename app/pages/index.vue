@@ -6,7 +6,11 @@
         <addPerson />
       </div>
     </Transition>
-    <detailsPerson />
+    <Transition name="window">
+      <div v-if="state.window.value === 'person_details'" id="detailsPerson" class="window">
+        <detailsPerson />
+      </div>
+    </Transition>
     <Transition name="window">
       <div v-if="state.window.value === 'person_edit'" id="editPerson" class="window">
         <EditPerson />
@@ -74,8 +78,12 @@
             })
         )
     toDataURL(icon).then((dataUrl) => {
-      set(0, dataUrl as string, dataUrl as string)
-      set(1, dataUrl as string, '')
+      set(
+        'f7c0a496-e445-4f1c-930e-c6153f84359c-1728489705256-photo',
+        dataUrl as string,
+        dataUrl as string
+      )
+      set('305d61c8-27ce-46b0-a193-19e2f35b027c-1728491651735-photo', dataUrl as string, '')
     })
   }
 </script>

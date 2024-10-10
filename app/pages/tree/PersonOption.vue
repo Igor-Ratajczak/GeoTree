@@ -33,9 +33,7 @@
       @click="
         () => {
           state.selectedPersonData.value = node.data
-          state.deletePersonParentId.value = node.parent
-            ? node.parent.data.id
-            : null
+          state.deletePersonParentId.value = node.parent ? node.parent.data.id : null
 
           state.window.value = 'person_delete'
         }
@@ -58,7 +56,7 @@
     rectX: number
     rectWidth: number
     rectHeight: number
-    node: D3HierarchyPointNode<FamilyNode>
+    node: D3HierarchyNode<FamilyNode>
   }>()
 
   const add = () => {
@@ -69,7 +67,7 @@
 
   const edit = () => {
     const node = props.node
-    get(node.data.id).then((icon: Icon) => {
+    get(node.data.id + '-photo').then((icon: Icon) => {
       state.window.value = 'person_edit'
       state.selectedPersonData.value = node.data
       state.personForm.value = {

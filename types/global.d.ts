@@ -15,6 +15,7 @@ declare global {
   }
 
   interface Icon {
+    id: string
     person: string
     spouse: string
   }
@@ -31,8 +32,9 @@ declare global {
     hasSpouse: boolean
     spouse: SpouseForm | null
   }
+
   interface FamilyNode {
-    id: number
+    id: string
     name: string
     birth: string | null
     death: string | null
@@ -42,7 +44,11 @@ declare global {
     spouse: SpouseNode | null
     children: FamilyNode[]
   }
-  type D3HierarchyPointNode<FamilyNode> = HierarchyPointNode<FamilyNode>
+  interface Family {
+    name: string
+    family: FamilyNode | null
+  }
+  type D3HierarchyNode<FamilyNode> = HierarchyNode<FamilyNode>
 }
 
 export {}

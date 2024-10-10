@@ -24,7 +24,7 @@
   const containerRef = useTemplateRef('containerRef')
   const svgRef = useTemplateRef('svgRef')
   const gRef = useTemplateRef('gRef')
-  const treeData = ref<d3.HierarchyPointNode<FamilyNode> | null>(null)
+  const treeData = ref<d3.HierarchyNode<FamilyNode> | null>(null)
 
   const createTree = (family: FamilyNode) => {
     const width = containerRef.value!.clientWidth
@@ -32,9 +32,7 @@
 
     // Calculate the tree layout
     const root = hierarchy(family)
-    const treeLayout = tree<FamilyNode>()
-      .size([width, height])
-      .nodeSize([700, 350])
+    const treeLayout = tree<FamilyNode>().size([width, height]).nodeSize([700, 350])
     treeLayout.separation((a, b) => (a.parent === b.parent ? 1 : 1.2))
 
     treeLayout(root)
@@ -50,23 +48,29 @@
     if (!gRef.value?.hasAttribute('transform')) {
       d3.select(svgRef.value!)
         .call(zoom)
-        .call(
-          zoom.transform as any,
-          d3.zoomIdentity.scale(1).translate(width / 2, height / 4)
-        )
+        .call(zoom.transform as any, d3.zoomIdentity.scale(1).translate(width / 2, height / 4))
     }
   }
-
   watch(
-    () => state.familyTree.value,
-    (newTree) => {
-      if (newTree) createTree(newTree)
+    () => state.selectedFamily.value,
+    (newVal) => {
+      if (newVal && state.AllFamilies.value[newVal]?.family)
+        createTree(state.AllFamilies.value[newVal].family)
+      else treeData.value = null
+    }
+  )
+  watch(
+    () => state.AllFamilies.value,
+    (newVal) => {
+      const i = state.selectedFamily.value
+      if (newVal && i >= 0 && i < newVal.length && newVal[i] && newVal[i].family)
+        createTree(newVal[i].family)
       else treeData.value = null
     },
     { deep: true }
   )
   onMounted(() => {
-    const family = state.familyTree.value
+    const family = state.AllFamilies.value[state.selectedFamily.value]?.family
     if (family) createTree(family)
     else treeData.value = null
   })

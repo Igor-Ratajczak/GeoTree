@@ -25,7 +25,7 @@
       </Transition>
 
       <image
-        :xlink:href="icon.person === '' ? defaultUserIcon : icon.person"
+        :xlink:href="icon === undefined || icon.person === '' ? defaultUserIcon : icon.person"
         :x="rectX + 10"
         y="15"
         width="100%"
@@ -35,7 +35,7 @@
       />
       <image
         v-if="node.data.hasSpouse"
-        :xlink:href="icon.spouse === '' ? defaultUserIcon : icon.spouse"
+        :xlink:href="icon === undefined || icon.spouse === '' ? defaultUserIcon : icon.spouse"
         :x="rectX + 310"
         y="15"
         width="100%"
@@ -43,16 +43,11 @@
         preserveAspectRatio="xMidYMid slice"
         @click="state.active_person.value = node.data.id"
       />
-      {{ setIcon(node.data.id) }}
       <!-- Add person text name, about, and spouse -->
       <AddText :x="rectX" :node="node"></AddText>
     </g>
     <!-- Recursively render child nodes -->
-    <CreatePerson
-      v-for="child in node.children || []"
-      :key="child.data.id"
-      :node="child"
-    />
+    <CreatePerson v-for="child in node.children || []" :key="child.data.id" :node="child" />
   </g>
 </template>
 
@@ -65,7 +60,7 @@
 
   // Define the props the component will receive
   const props = defineProps<{
-    node: D3HierarchyPointNode<FamilyNode>
+    node: D3HierarchyNode<FamilyNode>
   }>()
 
   // Rectangle dimensions
@@ -77,11 +72,20 @@
     person: defaultUserIcon,
     spouse: defaultUserIcon,
   })
-  const setIcon = (id: number) => {
+  const setIcon = (id: string) => {
     get(id).then((res: Icon) => {
       icon.value = res
     })
   }
+  setIcon(props.node.data.icon)
+
+  watch(
+    () => state.AllFamilies.value,
+    () => {
+      setIcon(props.node.data.icon)
+    },
+    { deep: true }
+  )
 </script>
 
 <style scoped lang="less">

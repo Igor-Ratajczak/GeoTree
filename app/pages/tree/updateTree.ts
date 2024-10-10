@@ -1,5 +1,5 @@
 import { state } from '../state'
-import { set } from './idb/manageIDB'
+import { del, set } from './idb/manageIDB'
 
 /**
  * updateTree
@@ -11,12 +11,12 @@ export class updateTree {
   }
 
   public add(icons: Icon, option: 'parent' | 'child' | null) {
+    const i = state.selectedFamily.value
     // Add the person to the family tree
     if (option === 'parent') {
-      const family = state.familyTree.value!
-      this.data.children.push(family)
-      set(state.numberPeople.value, icons.person, icons.spouse)
-      state.familyTree.value = this.data
+      this.data.children.push(state.AllFamilies.value[i]!.family!)
+      set(this.data.id, icons.person, icons.spouse)
+      state.AllFamilies.value[i]!.family = this.data
       state.window.value = null
       state.selectedPersonData.value = null
       state.personForm.value = {
@@ -31,25 +31,19 @@ export class updateTree {
       }
       state.numberPeople.value += 1
     } else if (option === 'child') {
-      this.getNode(
-        state.familyTree.value!,
-        state.selectedPersonData?.value?.id ? state.selectedPersonData?.value?.id : 0
-      ).then((node) => {
+      this.getNode(state.AllFamilies.value[i]!.family!, this.data.id).then((node) => {
         if (!node) return
-        set(state.numberPeople.value, icons.person, icons.spouse)
+        set(this.data.id, icons.person, icons.spouse)
         node.children?.push(this.data)
         state.numberPeople.value += 1
       })
     }
   }
   public save(icons: Icon) {
+    const i = state.selectedFamily.value
     // Edit the person in the family tree
-
-    set(state.selectedPersonData.value?.id, icons.person, icons.spouse)
-    this.getNode(
-      state.familyTree.value!,
-      state.selectedPersonData?.value?.id ? state.selectedPersonData?.value?.id : 0
-    ).then((node) => {
+    set(this.data.id + '-photo', icons.person, icons.spouse)
+    this.getNode(state.AllFamilies.value[i]!.family!, this.data.id).then((node) => {
       if (!node) return
       node.name = this.data.name
       node.birth = this.data.birth
@@ -60,18 +54,20 @@ export class updateTree {
       node.spouse = this.data.spouse
     })
   }
-  public delete(parentID: number | null) {
+  public delete(parentID: string | null) {
+    const i = state.selectedFamily.value
     if (parentID !== null) {
       // Delete the person from the family tree
-      this.getNode(state.familyTree.value!, parentID).then((node) => {
+      this.getNode(state.AllFamilies.value[i]!.family!, parentID).then((node) => {
         node?.children?.forEach((child) => {
           if (child.id === this.data.id) {
             node?.children?.splice(node?.children?.indexOf(child), 1)
+            del(this.data.id + '-photo')
           }
         })
       })
     } else {
-      state.familyTree.value = null
+      state.AllFamilies.value[i]!.family = null
       state.window.value = null
       state.selectedPersonData.value = null
       state.personForm.value = {
@@ -86,7 +82,7 @@ export class updateTree {
       }
     }
   }
-  private getNode(node: FamilyNode, targetId: number): Promise<FamilyNode | null> {
+  private getNode(node: FamilyNode, targetId: string): Promise<FamilyNode | null> {
     return new Promise((resolve, reject) => {
       if (!node) return resolve(null)
 

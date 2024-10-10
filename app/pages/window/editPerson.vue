@@ -48,6 +48,7 @@
     } as FamilyNode
 
     const icons = {
+      id: state.selectedPersonData.value?.id + '-photo',
       person: state.personForm.value.icon,
       spouse: state.personForm.value.spouse?.icon || '',
     }

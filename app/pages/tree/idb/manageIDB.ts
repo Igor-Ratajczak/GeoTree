@@ -3,12 +3,13 @@ import { openDB } from 'idb'
 const dbPromise = openDB('profile', 1, {
   upgrade(db) {
     const store = db.createObjectStore('icons')
+    store.createIndex('id', 'id', { unique: false })
     store.createIndex('person', 'person', { unique: false })
     store.createIndex('spouse', 'spouse', { unique: false })
   },
 })
 
-export async function get(key: IDBKeyRange | IDBValidKey) {
+export async function get(key: string) {
   return (await dbPromise).get('icons', key)
 }
 export async function set(

@@ -16,21 +16,16 @@
 
   // Define the props the component will receive
   const props = defineProps<{
-    node: HierarchyPointNode<FamilyNode>
+    node: D3HierarchyNode<FamilyNode>
   }>()
 
   // Compute the links (connections between nodes)
   const links = computed(() => (props.node.children ? props.node.links() : []))
 
   // Generate the path for the link using D3's linkVertical function
-  const generateLinkPath = (
-    link: HierarchyPointLink<FamilyNode>
-  ): string | null => {
+  const generateLinkPath = (link: HierarchyPointLink<FamilyNode>): string | null => {
     const d3LinkVertical = d3
-      .linkVertical<
-        HierarchyPointLink<FamilyNode>,
-        HierarchyPointNode<FamilyNode>
-      >()
+      .linkVertical<HierarchyPointLink<FamilyNode>, HierarchyPointNode<FamilyNode>>()
       .x((d) => d.x)
       .y((d) => d.y)
 

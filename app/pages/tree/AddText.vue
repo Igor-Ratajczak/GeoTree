@@ -58,16 +58,10 @@
     @click="state.active_person.value = node.data.id"
   >
     ur.
-    {{
-      node.data.spouse?.birth === null ? 'nie znana' : node.data.spouse?.birth
-    }}
+    {{ node.data.spouse?.birth === null ? 'nie znana' : node.data.spouse?.birth }}
   </text>
   <text
-    v-if="
-      node.data.hasSpouse === true &&
-      node.data.spouse &&
-      node.data.spouse.death !== null
-    "
+    v-if="node.data.hasSpouse === true && node.data.spouse && node.data.spouse.death !== null"
     class="text"
     :x="x + 440"
     y="110"
@@ -84,7 +78,7 @@
 
   defineProps<{
     x: number
-    node: D3HierarchyPointNode<FamilyNode>
+    node: D3HierarchyNode<FamilyNode>
   }>()
 </script>
 

@@ -16,7 +16,7 @@
           <line x1="0" y1="80" x2="100" y2="80" stroke="black" stroke-width="10"></line>
         </svg>
       </div>
-      <div class="menu-items" v-if="menu" @click="console.log(state.familyTree.value)">
+      <div class="menu-items" v-if="menu" @click="console.log(state.AllFamilies.value)">
         <div class="item" @click="state.window.value = 'import'">Import danych</div>
         <div class="item" @click="state.window.value = 'export'">Export danych</div>
         <div class="item" @click="state.window.value = 'settings'">Ustawienia</div>

@@ -1,58 +1,48 @@
 <template>
-  <Transition name="window">
-    <div
-      v-if="state.window.value === 'person_details'"
-      id="detailsPerson"
-      class="window"
-    >
-      <div class="title">Dane o osobie</div>
-      <div class="close" @click="state.window.value = null">X</div>
-      <div class="details">
-        <img class="icon" :src="icon" alt="person" />
-        <div class="name">{{ data?.name }}</div>
-        <div class="birth">ur. {{ data?.birth }}</div>
-        <div class="death">zm. {{ data?.death }}</div>
-        <div class="description">
-          {{ data?.description }}
-        </div>
-        <div
-          class="user-data"
-          v-if="data?.userData"
-          v-for="data in data?.userData"
-        >
-          <div class="name">{{ data?.name }}:</div>
-          <div class="text">{{ data?.text }}</div>
-        </div>
-        <div class="spouse" v-if="data?.hasSpouse">
-          <div class="text">Współmałżonek</div>
-          <img class="icon" :src="iconSpouse" alt="spouse" />
-          <div class="name">{{ data?.spouse?.name }}</div>
-          <div class="birth">ur. {{ data?.spouse?.birth }}</div>
-          <div class="death">zm. {{ data?.spouse?.death }}</div>
-          <div class="description">
-            {{ data?.spouse?.description }}
-          </div>
-          <div
-            class="user-data"
-            v-if="data?.spouse?.userData"
-            v-for="data in data?.spouse.userData"
-          >
-            <div class="name">{{ data?.name }}:</div>
-            <div class="text">{{ data?.text }}</div>
-          </div>
-        </div>
+  <div class="title">Dane o osobie</div>
+  <div class="close" @click="state.window.value = null">X</div>
+  <div class="details">
+    <img class="icon" :src="icon" alt="person" />
+    <div class="name">{{ data?.name }}</div>
+    <div class="birth">ur. {{ data?.birth }}</div>
+    <div class="death">zm. {{ data?.death }}</div>
+    <div class="description">
+      {{ data?.description }}
+    </div>
+    <div class="user-data" v-if="data?.userData" v-for="data in data?.userData">
+      <div class="name">{{ data?.name }}:</div>
+      <div class="text">{{ data?.text }}</div>
+    </div>
+    <div class="spouse" v-if="data?.hasSpouse">
+      <div class="text">Współmałżonek</div>
+      <img class="icon" :src="iconSpouse" alt="spouse" />
+      <div class="name">{{ data?.spouse?.name }}</div>
+      <div class="birth">ur. {{ data?.spouse?.birth }}</div>
+      <div class="death">zm. {{ data?.spouse?.death }}</div>
+      <div class="description">
+        {{ data?.spouse?.description }}
+      </div>
+      <div class="user-data" v-if="data?.spouse?.userData" v-for="data in data?.spouse.userData">
+        <div class="name">{{ data?.name }}:</div>
+        <div class="text">{{ data?.text }}</div>
       </div>
     </div>
-  </Transition>
+  </div>
 </template>
 
 <script setup lang="ts">
   import { state } from '../state'
+  import { get } from '../tree/idb/manageIDB'
 
-  const data = computed(() => state.selectedPersonData.value)
+  const data = ref(state.selectedPersonData.value)
 
-  const icon = computed(() => state.personForm.value?.icon)
-  const iconSpouse = computed(() => state.personForm.value?.spouse?.icon)
+  const icon = ref('')
+  const iconSpouse = ref('')
+
+  get(data.value?.id + '-photo').then((res: Icon) => {
+    icon.value = res.person
+    iconSpouse.value = res.spouse
+  })
 </script>
 
 <style scoped lang="less">

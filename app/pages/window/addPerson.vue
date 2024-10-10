@@ -47,6 +47,9 @@
   }
 
   const addPerson = () => {
+    const uuid = crypto.randomUUID()
+    const uniqueId = `${uuid}-${new Date().getTime()}`
+
     const newChild = {
       name: state.personForm.value?.name,
       birth: state.personForm.value?.birth,
@@ -56,10 +59,11 @@
       hasSpouse: state.personForm.value?.hasSpouse,
       spouse: state.personForm.value?.spouse,
       children: [],
-      id: state.numberPeople.value,
+      id: uniqueId,
     } as FamilyNode
 
     const icons = {
+      id: uniqueId + '-photo',
       person: state.personForm.value.icon,
       spouse: state.personForm.value.spouse?.icon || '',
     }

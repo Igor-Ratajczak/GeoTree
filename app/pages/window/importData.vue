@@ -1,35 +1,59 @@
 <template>
   <Transition name="window">
     <div v-if="state.window.value === 'import'" id="importData" class="window">
-      <div class="title">Importuj dane</div>
+      <div class="title" @click="console.log(families)">Importuj dane</div>
       <div class="close" @click="state.window.value = null">X</div>
       <div class="imports">
         <div class="upload-file">
-          <input type="file" name="file" id="file" accept=".json" @change="onFileChange($event)" />
+          <button @click="input?.click()">{{ text }}</button>
+          <input
+            ref="file"
+            type="file"
+            name="file"
+            id="file"
+            accept=".json"
+            @change="onFileChange"
+          />
         </div>
         <div class="tree_structure" v-if="importData !== null">
           <div class="family parent">
             <input
               type="checkbox"
               name="family"
-              id="family"
-              @change="
-                ;($event.target as HTMLInputElement).checked === true
-                  ? (checked = true)
-                  : (checked = false)
-              "
+              id="importAllFamilies"
+              v-model="importAllFamilies"
+              @change="allFamiliesSelected()"
             />
             <label for="family">Importuj wszystkie rodziny</label>
-            <div class="families child">
-              <input type="checkbox" name="family" id="family" v-model="checked" />
-              <label for="family">Importuj {{ importData.name }}</label>
+            <div
+              class="families child"
+              v-for="(family, index) in importData.AllFamilies"
+              :key="index"
+            >
+              <input
+                type="checkbox"
+                name="family"
+                :id="'family' + index"
+                v-model="families[index]"
+              />
+              <label :for="'family' + index">Importuj {{ family?.name }}</label>
             </div>
           </div>
           <div class="settings parent">
-            <input type="checkbox" name="settings" id="settings" />
-            <label for="settings">Importuj ustawienia</label>
+            <input type="checkbox" name="importSettings" id="importSettings" v-model="settings" />
+            <label for="importSettings">Importuj ustawienia</label>
           </div>
         </div>
+        <div class="remove-actual-data">
+          <input
+            type="checkbox"
+            name="removeActualData"
+            id="removeActualData"
+            v-model="removeActualData"
+          />
+          <label for="removeActualData">Usuń aktualne dane</label>
+        </div>
+        <button class="button" @click="setData">Importuj</button>
       </div>
     </div>
   </Transition>
@@ -37,20 +61,98 @@
 
 <script setup lang="ts">
   import { state } from '../state'
+  import { clear, set } from '../tree/idb/manageIDB'
 
-  const checked = ref(false)
+  const input = useTemplateRef('file')
+  const text = ref('Wybierz plik.')
+  interface Data {
+    icons: Icon[]
+    AllFamilies: [
+      {
+        name: string
+        family: FamilyNode
+      }
+    ]
+    settings: {
+      name: string
+      value: string
+    } | null
+  }
 
-  const importData: Ref<FamilyNode | null> = ref(null)
+  const removeActualData = ref(false)
+
+  const importAllFamilies: Ref<boolean> = ref(false)
+  const families: Ref<Array<boolean | null>> = ref([null])
+  const settings: Ref<boolean | null> = ref(null)
+
+  const importData: Ref<Data | null> = ref(null)
+
+  const allFamiliesSelected = () => {
+    if (importAllFamilies.value === true) {
+      importData.value?.AllFamilies.forEach((_, index: number) => (families.value![index] = true))
+    } else {
+      families.value = [null]
+    }
+  }
+  watch(
+    () => families.value,
+    (newVal) => {
+      if (
+        newVal.length === importData.value?.AllFamilies.length &&
+        newVal.every((val) => val === true)
+      ) {
+        importAllFamilies.value = true
+      } else {
+        importAllFamilies.value = false
+      }
+    },
+    {
+      deep: true,
+    }
+  )
 
   const onFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement
     const file = target.files?.[0]
     if (!file) return
+    text.value = file.name
     const reader = new FileReader()
     reader.readAsText(file)
     reader.onload = (e) => {
       importData.value = JSON.parse(e.target?.result as string)
     }
+  }
+  const setData = () => {
+    const selectedFamilies =
+      importAllFamilies.value === true
+        ? importData.value?.AllFamilies
+        : importData.value?.AllFamilies.filter((_, index: number) => families.value![index])
+
+    const selectedSettings = settings.value ? importData.value?.settings : null
+    const icons = importData.value?.icons
+    if (icons) {
+      icons.forEach((icon) => {
+        set(icon.id, icon.person, icon.spouse)
+      })
+    }
+    if (removeActualData.value === true) {
+      state.AllFamilies.value = selectedFamilies!
+      state.settings.value = [selectedSettings!]
+      state.window.value = null
+      clear()
+    } else if (removeActualData.value === false) {
+      state.AllFamilies.value.push(...selectedFamilies!)
+      state.settings.value?.push(selectedSettings!)
+      if (importData.value?.icons)
+        importData.value?.icons.forEach((icon) => set(icon.id, icon.person, icon.spouse))
+      state.window.value = null
+    }
+    removeActualData.value = false
+    importData.value = null
+    families.value = [null]
+    importAllFamilies.value = false
+    settings.value = null
+    text.value = 'Wybierz plik.'
   }
 </script>
 
@@ -60,6 +162,19 @@
     display: grid;
     grid-template-rows: 1fr 5fr;
     gap: 2em;
+    overflow: auto;
+    padding: 2em;
+
+    input[type='checkbox'] {
+      width: 50px;
+      height: 50px;
+      accent-color: green;
+    }
+
+    label {
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
 
     .upload-file {
       display: grid;
@@ -83,8 +198,6 @@
         input {
           grid-row: 1;
           grid-column: 1;
-          width: 50px;
-          height: 50px;
         }
 
         label {
@@ -94,13 +207,20 @@
 
         .child {
           display: flex;
-          grid-row: 2;
           grid-column: 2;
           margin-left: 2em;
           gap: 1em;
           align-items: center;
         }
       }
+    }
+
+    .remove-actual-data {
+      display: flex;
+      flex-direction: row;
+      gap: 1em;
+      justify-content: center;
+      align-items: center;
     }
   }
 </style>
