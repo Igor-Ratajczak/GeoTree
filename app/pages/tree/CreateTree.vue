@@ -26,21 +26,23 @@
   const gRef = useTemplateRef('gRef')
   const treeData = ref<d3.HierarchyNode<FamilyNode> | null>(null)
 
+  // function to create tree
   const createTree = (family: FamilyNode) => {
+    // get width and height of container
     const width = containerRef.value!.clientWidth
     const height = containerRef.value!.clientHeight
 
-    // Calculate the tree layout
+    // calculate tree layout
     const root = hierarchy(family)
     const treeLayout = tree<FamilyNode>().size([width, height]).nodeSize([700, 350])
     treeLayout.separation((a, b) => (a.parent === b.parent ? 1 : 1.2))
 
     treeLayout(root)
 
-    // Assign the processed data to the reactive treeData variable
+    // assign data to reactive treeData variable
     treeData.value = root
 
-    // Setup D3 zoom
+    // set up D3 zoom
     const zoom = d3.zoom<SVGSVGElement, unknown>().on('zoom', (e) => {
       d3.select(gRef.value!).attr('transform', e.transform)
     })
@@ -51,6 +53,8 @@
         .call(zoom.transform as any, d3.zoomIdentity.scale(1).translate(width / 2, height / 4))
     }
   }
+
+  // watch selected family and create tree if selected family is changed
   watch(
     () => state.selectedFamily.value,
     (newVal) => {
@@ -59,6 +63,8 @@
       else treeData.value = null
     }
   )
+
+  // watch all families and create tree if selected family is changed
   watch(
     () => state.AllFamilies.value,
     (newVal) => {
@@ -69,6 +75,8 @@
     },
     { deep: true }
   )
+
+  // create tree on mounted
   onMounted(() => {
     const family = state.AllFamilies.value[state.selectedFamily.value]?.family
     if (family) createTree(family)

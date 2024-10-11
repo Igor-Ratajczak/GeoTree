@@ -22,34 +22,42 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../state'
-  import { updateTree } from '../tree/updateTree'
+  import { state } from '../../state'
+  import { updateTree } from '../../tree/updateTree'
   import PersonForm from './PersonForm.vue'
 
   const hasSpouse = ref(false)
   const optionSelected = ref(false)
   const option: Ref<'parent' | 'child' | null> = ref(null)
 
+  // watch if has spouse change and update this in personForm
   watch(hasSpouse, (newValue) => {
     state.personForm.value.hasSpouse = newValue
   })
 
+  // Select option 'parent' or 'child' to add new person
   const setOption = (val: 'parent' | 'child') => {
     if (val === 'parent') hasSpouse.value = true
     option.value = val
     optionSelected.value = true
   }
 
+  // close window and set const to default
   const close = () => {
     state.window.value = null
     optionSelected.value = false
     hasSpouse.value = false
   }
 
+  /**
+   * Add person with values from personForm
+   */
   const addPerson = () => {
+    // create unique ID to person
     const uuid = crypto.randomUUID()
     const uniqueId = `${uuid}-${new Date().getTime()}`
 
+    // get all values from personForm
     const newChild = {
       name: state.personForm.value?.name,
       birth: state.personForm.value?.birth,
@@ -62,14 +70,17 @@
       id: uniqueId,
     } as FamilyNode
 
+    // set icon unique ID and icon to person and spouse
     const icons = {
       id: uniqueId + '-photo',
       person: state.personForm.value.icon,
       spouse: state.personForm.value.spouse?.icon || '',
     }
 
+    // send new person data to update family tree
     new updateTree(newChild).add(icons, option.value)
 
+    // set const to default
     optionSelected.value = false
     hasSpouse.value = false
     option.value = null

@@ -31,14 +31,16 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../state'
-  import { get } from '../tree/idb/manageIDB'
+  import { state } from '../../state'
+  import { get } from '../../tree/idb/manageIDB'
 
+  // get selected person data
   const data = ref(state.selectedPersonData.value)
 
   const icon = ref('')
   const iconSpouse = ref('')
 
+  // get and set person icon
   get(data.value?.id + '-photo').then((res: Icon) => {
     icon.value = res.person
     iconSpouse.value = res.spouse

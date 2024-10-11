@@ -60,11 +60,11 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../state'
-  import { clear, set } from '../tree/idb/manageIDB'
+  import { state } from '../../state'
+  import { clear, set } from '../../tree/idb/manageIDB'
 
-  const input = useTemplateRef('file')
-  const text = ref('Wybierz plik.')
+  const input = useTemplateRef('file') // input template for check upload file name
+  const text = ref('Wybierz plik.') // show text if file is upload or not
   interface Data {
     icons: Icon[]
     AllFamilies: [
@@ -80,13 +80,12 @@
   }
 
   const removeActualData = ref(false)
-
   const importAllFamilies: Ref<boolean> = ref(false)
   const families: Ref<Array<boolean | null>> = ref([null])
   const settings: Ref<boolean | null> = ref(null)
-
   const importData: Ref<Data | null> = ref(null)
 
+  // check is all family input is selected or not
   const allFamiliesSelected = () => {
     if (importAllFamilies.value === true) {
       importData.value?.AllFamilies.forEach((_, index: number) => (families.value![index] = true))
@@ -94,47 +93,56 @@
       families.value = [null]
     }
   }
+
+  // watch the family inputs
   watch(
     () => families.value,
     (newVal) => {
+      // if newVal has length equal to AllFamilies in importData  and newVal has all set to true
       if (
         newVal.length === importData.value?.AllFamilies.length &&
         newVal.every((val) => val === true)
       ) {
+        // set input all families to checked
         importAllFamilies.value = true
       } else {
+        // else to not checked
         importAllFamilies.value = false
       }
     },
-    {
-      deep: true,
-    }
+    { deep: true }
   )
 
+  /**
+   * Get upload json file and set importData to text in json file
+   * @param e Event
+   */
   const onFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement
-    const file = target.files?.[0]
-    if (!file) return
-    text.value = file.name
-    const reader = new FileReader()
-    reader.readAsText(file)
+    const file = target.files?.[0] // json file
+    if (!file) return // check is not null
+    text.value = file.name // text for input file is file name
+    const reader = new FileReader() // create file reader
+    reader.readAsText(file) // read this file
     reader.onload = (e) => {
-      importData.value = JSON.parse(e.target?.result as string)
+      importData.value = JSON.parse(e.target?.result as string) // set importData to text in json file
     }
   }
+
+  /**
+   * Set data from importData to state.ts
+   */
   const setData = () => {
+    // check which families is checked
     const selectedFamilies =
       importAllFamilies.value === true
         ? importData.value?.AllFamilies
         : importData.value?.AllFamilies.filter((_, index: number) => families.value![index])
 
+    // check is settings is checked
     const selectedSettings = settings.value ? importData.value?.settings : null
-    const icons = importData.value?.icons
-    if (icons) {
-      icons.forEach((icon) => {
-        set(icon.id, icon.person, icon.spouse)
-      })
-    }
+
+    // set or push data to site
     if (removeActualData.value === true) {
       state.AllFamilies.value = selectedFamilies!
       state.settings.value = [selectedSettings!]
@@ -143,10 +151,17 @@
     } else if (removeActualData.value === false) {
       state.AllFamilies.value.push(...selectedFamilies!)
       state.settings.value?.push(selectedSettings!)
-      if (importData.value?.icons)
-        importData.value?.icons.forEach((icon) => set(icon.id, icon.person, icon.spouse))
       state.window.value = null
     }
+    const icons = importData.value?.icons
+    // set all icons to indexedDataBase
+    if (icons) {
+      icons.forEach((icon) => {
+        set(icon.id, icon.person, icon.spouse)
+      })
+    }
+
+    // set all const to default
     removeActualData.value = false
     importData.value = null
     families.value = [null]

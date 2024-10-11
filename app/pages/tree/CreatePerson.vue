@@ -68,10 +68,13 @@
   const rectHeight = 150
   const rectX = computed(() => -rectWidth.value / 5)
 
+  // person icon
   const icon = ref({
     person: defaultUserIcon,
     spouse: defaultUserIcon,
   })
+
+  // get and set person icon
   const setIcon = (id: string) => {
     get(id).then((res: Icon) => {
       icon.value = res
@@ -79,6 +82,7 @@
   }
   setIcon(props.node.data.icon)
 
+  // watch if the AllFamilies is changed and update person icons
   watch(
     () => state.AllFamilies.value,
     () => {
