@@ -154,12 +154,13 @@
       state.window.value = null
     }
     const icons = importData.value?.icons
+
     // set all icons to indexedDataBase
-    if (icons) {
-      icons.forEach((icon) => {
+    icons?.forEach((icon) => {
+      if (selectedFamilies?.filter((family) => family?.family?.id === icon.id)) {
         set(icon.id, icon.person, icon.spouse)
-      })
-    }
+      }
+    })
 
     // set all const to default
     removeActualData.value = false

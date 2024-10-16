@@ -12,6 +12,9 @@ const dbPromise = openDB('profile', 1, {
 export async function get(key: string) {
   return (await dbPromise).get('icons', key)
 }
+export async function getAll() {
+  return (await dbPromise).getAll('icons')
+}
 export async function set(
   key: IDBKeyRange | IDBValidKey | undefined,
   val: string,
