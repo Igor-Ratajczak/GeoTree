@@ -1,7 +1,7 @@
 <template>
   <Transition name="window">
     <div v-if="state.window.value === 'import'" id="importData" class="window">
-      <div class="title" @click="console.log(families)">Importuj dane</div>
+      <div class="title">Importuj dane</div>
       <div class="close" @click="state.window.value = null">X</div>
       <div class="imports">
         <div class="upload-file">

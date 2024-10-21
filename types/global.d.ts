@@ -1,5 +1,5 @@
 // types/global.d.ts
-import type { HierarchyPointNode } from 'd3-hierarchy'
+import type { HierarchyNode } from 'd3-hierarchy'
 
 declare global {
   interface UserData {
@@ -35,6 +35,7 @@ declare global {
 
   interface FamilyNode {
     id: string
+    icon: string
     name: string
     birth: string | null
     death: string | null

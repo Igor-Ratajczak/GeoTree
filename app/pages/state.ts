@@ -18,7 +18,9 @@ export interface State {
     | 'about'
     | null
   >
-  active_person: Ref<number | null>
+  active_person: Ref<string | null>
+  old_active_person: Ref<string | null>
+  transform: Ref<{ x: number; y: number; k: number }>
   settings: Ref<
     | [
         {
@@ -98,5 +100,7 @@ export const state: State = {
   selectedFamily: ref(0),
   window: ref(null),
   active_person: ref(null),
+  old_active_person: ref(null),
+  transform: ref({ x: 0, y: 0, k: 1 }),
   settings: ref(null),
 }

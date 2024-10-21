@@ -2,12 +2,14 @@
   <div id="tree-container" ref="containerRef">
     <svg ref="svgRef">
       <g ref="gRef">
-        <Transition>
-          <TreeLinks v-if="treeData" :node="treeData" />
-        </Transition>
-        <Transition>
-          <CreatePerson v-if="treeData" :node="treeData" />
-        </Transition>
+        <g>
+          <Transition>
+            <TreeLinks v-if="treeData" :node="treeData" />
+          </Transition>
+          <Transition>
+            <CreatePerson v-if="treeData" :node="treeData" />
+          </Transition>
+        </g>
       </g>
     </svg>
   </div>
@@ -44,8 +46,41 @@
 
     // set up D3 zoom
     const zoom = d3.zoom<SVGSVGElement, unknown>().on('zoom', (e) => {
-      d3.select(gRef.value!).attr('transform', e.transform)
+      state.transform.value = { x: e.transform.x, y: e.transform.y, k: e.transform.k }
+      d3.select(gRef.value!).attr(
+        'transform',
+        `translate(${e.transform.x}, ${e.transform.y}) scale(${e.transform.k})`
+      )
     })
+    // watch transform and update D3 zoom when the person is selected from input search
+    watch(
+      state.transform,
+      (newVal, oldVal) => {
+        if (state.old_active_person.value === state.active_person.value) return
+
+        const animationData = [
+          { transform: `translate(${oldVal!.x}px, ${oldVal!.y}px) scale(${oldVal!.k})` },
+          { transform: `translate(${newVal!.x}px, ${newVal!.y}px) scale(1)` },
+        ]
+        const animationTiming = {
+          duration: 1000,
+          easing: 'ease-in-out',
+        }
+        // if (newVal2 === oldVal2) return
+        const animation = gRef.value!.animate(animationData, animationTiming)
+
+        animation.onfinish = () => {
+          const zoom = d3.zoom<SVGSVGElement, unknown>()
+          d3.select(svgRef.value!).call(
+            zoom.transform as any,
+            d3.zoomIdentity.scale(1).translate(newVal.x, newVal.y)
+          )
+          d3.select(gRef.value!).attr('transform', `translate(${newVal!.x}, ${newVal!.y}) scale(1)`)
+          state.old_active_person.value = state.active_person.value
+        }
+      },
+      { deep: true }
+    )
 
     if (!gRef.value?.hasAttribute('transform')) {
       d3.select(svgRef.value!)

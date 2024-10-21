@@ -57,6 +57,7 @@
   import { state } from '../state'
   import { get } from './idb/manageIDB'
   import defaultUserIcon from '/assets/defaultUserIcon.svg'
+  import type { HierarchyNode } from 'd3'
 
   // Define the props the component will receive
   const props = defineProps<{
@@ -89,6 +90,22 @@
       setIcon(props.node.data.icon)
     },
     { deep: true }
+  )
+
+  watch(
+    () => state.active_person.value,
+    () => {
+      const node: HierarchyNode<FamilyNode> = props.node
+      const width = window.innerWidth
+      const height = window.innerHeight
+      if (state.active_person.value === node.data.id) {
+        state.transform.value = {
+          x: width / 2 - (node.x || 0),
+          y: height / 4 - (node.y || 0),
+          k: state.transform.value.k,
+        }
+      }
+    }
   )
 </script>
 
