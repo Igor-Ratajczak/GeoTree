@@ -1,27 +1,28 @@
 export interface State {
-  numberPeople: Ref<number>
-  deletePersonParentId: Ref<string | null>
-  selectedPersonData: Ref<FamilyNode | null>
-  personForm: Ref<PersonForm>
-  addOptionPerson: Ref<'parent' | 'child' | null>
-  hasParent: Ref<boolean | null>
-  AllFamilies: Ref<Array<Family | null>>
-  selectedFamily: Ref<number>
-  window: Ref<
+  numberPeople: number
+  deletePersonParentId: string | null
+  selectedPersonData: FamilyNode | null
+  personForm: PersonForm
+  addOptionPerson: 'parent' | 'child' | null
+  hasParent: boolean | null
+  AllFamilies: Array<Family | null>
+  selectedFamily: string
+  window:
     | 'person_add'
     | 'person_details'
     | 'person_edit'
     | 'person_delete'
+    | 'families'
     | 'import'
     | 'export'
     | 'settings'
     | 'about'
     | null
-  >
-  active_person: Ref<string | null>
-  old_active_person: Ref<string | null>
-  transform: Ref<{ x: number; y: number; k: number }>
-  settings: Ref<
+
+  active_person: string | null
+  old_active_person: string | null
+  transform: { x: number; y: number; k: number }
+  settings:
     | [
         {
           name: string
@@ -29,16 +30,15 @@ export interface State {
         }
       ]
     | null
-  >
 }
 
-export const state: State = {
-  numberPeople: ref(2),
-  deletePersonParentId: ref(null),
-  selectedPersonData: ref(null),
-  addOptionPerson: ref(null),
-  hasParent: ref(null),
-  personForm: ref({
+const state = reactive<State>({
+  numberPeople: 2,
+  deletePersonParentId: null,
+  selectedPersonData: null,
+  addOptionPerson: null,
+  hasParent: null,
+  personForm: {
     icon: '',
     name: '',
     birth: null,
@@ -47,10 +47,11 @@ export const state: State = {
     userData: [],
     hasSpouse: false,
     spouse: null,
-  }),
-  AllFamilies: ref([
+  },
+  AllFamilies: [
     {
-      name: 'test',
+      name: 'tanki online gra wieloosobowa',
+      id: 'f7c0a496-e445-4f1c-930e',
       family: {
         id: 'f7c0a496-e445-4f1c-930e-c6153f84359c-1728489705256',
         icon: 'f7c0a496-e445-4f1c-930e-c6153f84359c-1728489705256-photo',
@@ -96,11 +97,15 @@ export const state: State = {
         ],
       },
     },
-  ]),
-  selectedFamily: ref(0),
-  window: ref(null),
-  active_person: ref(null),
-  old_active_person: ref(null),
-  transform: ref({ x: 0, y: 0, k: 1 }),
-  settings: ref(null),
+  ],
+  selectedFamily: 'f7c0a496-e445-4f1c-930e',
+  window: null,
+  active_person: null,
+  old_active_person: null,
+  transform: { x: 0, y: 0, k: 1 },
+  settings: null,
+})
+
+export const useAppStore = () => {
+  return { state }
 }

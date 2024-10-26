@@ -1,11 +1,5 @@
 <template>
-  <text
-    class="text"
-    :x="x + 150"
-    y="30"
-    font-size="25"
-    @click="state.active_person.value = node.data.id"
-  >
+  <text class="text" :x="x + 150" y="30" font-size="25" @click="state.active_person = node.data.id">
     {{
       node.data.name
         ? node.data.name.length > 12
@@ -14,13 +8,7 @@
         : '???'
     }}
   </text>
-  <text
-    class="text"
-    :x="x + 150"
-    y="80"
-    font-size="20"
-    @click="state.active_person.value = node.data.id"
-  >
+  <text class="text" :x="x + 150" y="80" font-size="20" @click="state.active_person = node.data.id">
     ur. {{ node.data.birth !== null ? node.data.birth : 'nie znana' }}
   </text>
   <text
@@ -29,7 +17,7 @@
     :x="x + 150"
     y="110"
     font-size="20"
-    @click="state.active_person.value = node.data.id"
+    @click="state.active_person = node.data.id"
   >
     zm. {{ node.data.death !== '' ? node.data.death : 'nie znana' }}
   </text>
@@ -39,7 +27,7 @@
     :x="x + 440"
     y="30"
     font-size="25"
-    @click="state.active_person.value = node.data.id"
+    @click="state.active_person = node.data.id"
   >
     {{
       node.data.spouse?.name
@@ -55,7 +43,7 @@
     :x="x + 440"
     y="80"
     font-size="20"
-    @click="state.active_person.value = node.data.id"
+    @click="state.active_person = node.data.id"
   >
     ur.
     {{ node.data.spouse?.birth === null ? 'nie znana' : node.data.spouse?.birth }}
@@ -66,7 +54,7 @@
     :x="x + 440"
     y="110"
     font-size="20"
-    @click="state.active_person.value = node.data.id"
+    @click="state.active_person = node.data.id"
   >
     zm.
     {{ node.data.spouse?.death !== '' ? node.data.spouse?.death : 'nie znana' }}
@@ -74,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../state'
+  const { state } = useAppStore()
 
   defineProps<{
     x: number

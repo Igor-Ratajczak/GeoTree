@@ -1,8 +1,8 @@
 <template>
   <Transition name="window">
-    <div v-if="state.window.value === 'import'" id="importData" class="window">
+    <div v-if="state.window === 'import'" id="importData" class="window">
       <div class="title">Importuj dane</div>
-      <div class="close" @click="state.window.value = null">X</div>
+      <div class="close" @click="state.window = null">X</div>
       <div class="imports">
         <div class="upload-file">
           <button @click="input?.click()">{{ text }}</button>
@@ -60,8 +60,7 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../../state'
-  import { clear, set } from '../../tree/idb/manageIDB'
+  const { state } = useAppStore()
 
   const input = useTemplateRef('file') // input template for check upload file name
   const text = ref('Wybierz plik.') // show text if file is upload or not
@@ -71,6 +70,7 @@
       {
         name: string
         family: FamilyNode
+        id: string
       }
     ]
     settings: {
@@ -144,14 +144,14 @@
 
     // set or push data to site
     if (removeActualData.value === true) {
-      state.AllFamilies.value = selectedFamilies!
-      state.settings.value = [selectedSettings!]
-      state.window.value = null
+      state.AllFamilies = selectedFamilies!
+      state.settings = [selectedSettings!]
+      state.window = null
       clear()
     } else if (removeActualData.value === false) {
-      state.AllFamilies.value.push(...selectedFamilies!)
-      state.settings.value?.push(selectedSettings!)
-      state.window.value = null
+      state.AllFamilies.push(...selectedFamilies!)
+      state.settings?.push(selectedSettings!)
+      state.window = null
     }
     const icons = importData.value?.icons
 

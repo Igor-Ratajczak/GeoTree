@@ -7,7 +7,7 @@
             <TreeLinks v-if="treeData" :node="treeData" />
           </Transition>
           <Transition>
-            <CreatePerson v-if="treeData" :node="treeData" />
+            <TreeCreatePerson v-if="treeData" :node="treeData" />
           </Transition>
         </g>
       </g>
@@ -18,10 +18,8 @@
 <script setup lang="ts">
   import * as d3 from 'd3'
   import { hierarchy, tree } from 'd3-hierarchy'
-  import TreeLinks from './TreeLinks.vue'
-  import CreatePerson from './CreatePerson.vue'
-  import { state } from '../state'
-  import { useTemplateRef } from 'vue'
+
+  const { state } = useAppStore()
 
   const containerRef = useTemplateRef('containerRef')
   const svgRef = useTemplateRef('svgRef')
@@ -46,7 +44,7 @@
 
     // set up D3 zoom
     const zoom = d3.zoom<SVGSVGElement, unknown>().on('zoom', (e) => {
-      state.transform.value = { x: e.transform.x, y: e.transform.y, k: e.transform.k }
+      state.transform = { x: e.transform.x, y: e.transform.y, k: e.transform.k }
       d3.select(gRef.value!).attr(
         'transform',
         `translate(${e.transform.x}, ${e.transform.y}) scale(${e.transform.k})`
@@ -54,9 +52,13 @@
     })
     // watch transform and update D3 zoom when the person is selected from input search
     watch(
-      state.transform,
+      () => state.transform,
       (newVal, oldVal) => {
-        if (state.old_active_person.value === state.active_person.value) return
+        if (
+          state.old_active_person === state.active_person ||
+          (newVal.x === oldVal?.x && newVal.y === oldVal?.y && newVal.k === oldVal?.k)
+        )
+          return
 
         const animationData = [
           { transform: `translate(${oldVal!.x}px, ${oldVal!.y}px) scale(${oldVal!.k})` },
@@ -66,7 +68,6 @@
           duration: 1000,
           easing: 'ease-in-out',
         }
-        // if (newVal2 === oldVal2) return
         const animation = gRef.value!.animate(animationData, animationTiming)
 
         animation.onfinish = () => {
@@ -76,7 +77,7 @@
             d3.zoomIdentity.scale(1).translate(newVal.x, newVal.y)
           )
           d3.select(gRef.value!).attr('transform', `translate(${newVal!.x}, ${newVal!.y}) scale(1)`)
-          state.old_active_person.value = state.active_person.value
+          state.old_active_person = state.active_person
         }
       },
       { deep: true }
@@ -88,34 +89,26 @@
         .call(zoom.transform as any, d3.zoomIdentity.scale(1).translate(width / 2, height / 4))
     }
   }
+  const setTree = () => {
+    const family = state.AllFamilies[getFamily()]?.family
+    if (family) createTree(family)
+    else treeData.value = null
+  }
 
-  // watch selected family and create tree if selected family is changed
+  // watch for update tree
   watch(
-    () => state.selectedFamily.value,
-    (newVal) => {
-      if (newVal && state.AllFamilies.value[newVal]?.family)
-        createTree(state.AllFamilies.value[newVal].family)
-      else treeData.value = null
-    }
-  )
-
-  // watch all families and create tree if selected family is changed
-  watch(
-    () => state.AllFamilies.value,
-    (newVal) => {
-      const i = state.selectedFamily.value
-      if (newVal && i >= 0 && i < newVal.length && newVal[i] && newVal[i].family)
-        createTree(newVal[i].family)
-      else treeData.value = null
+    () => [state.selectedFamily, state.AllFamilies],
+    () => {
+      setTree()
     },
-    { deep: true }
+    {
+      deep: true,
+    }
   )
 
   // create tree on mounted
   onMounted(() => {
-    const family = state.AllFamilies.value[state.selectedFamily.value]?.family
-    if (family) createTree(family)
-    else treeData.value = null
+    setTree()
   })
 </script>
 

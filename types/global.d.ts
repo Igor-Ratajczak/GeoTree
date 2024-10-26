@@ -48,6 +48,7 @@ declare global {
   interface Family {
     name: string
     family: FamilyNode | null
+    id: string
   }
   type D3HierarchyNode<FamilyNode> = HierarchyNode<FamilyNode>
 }

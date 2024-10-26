@@ -1,7 +1,11 @@
 {
-  "name": "nuxt-app",
+  "name": "geo-tree",
   "private": true,
   "type": "module",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "GenTree to aplikacja, ktora tworzy pomoże ci stworzyć twoje drzewo genealogiczne.",
+  "author": "Igor Ratajczak",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",

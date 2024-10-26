@@ -1,3 +1,8 @@
+:root {
+  --bg_button-hover: green;
+  --clr_button-hover: white;
+}
+
 *,
 *::before,
 *::after {
@@ -26,7 +31,7 @@ svg * {
   background-color: #f5f5f5;
   z-index: 10000;
   display: grid;
-  grid-template: 60px auto / auto 60px;
+  grid-template: 80px auto / auto 60px;
   overflow: hidden;
   box-shadow: 0 0 50px 20px rgb(20, 20, 20);
 
@@ -89,9 +94,11 @@ svg * {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     border-radius: 0;
     transition: all 0.5s ease;
+    height: 60px;
+    align-self: center;
 
     &:hover {
-      background: #bdbdbd;
+      background: #555555;
       border-radius: 50px;
     }
   }
@@ -135,7 +142,7 @@ svg * {
   justify-self: center;
 
   &:hover {
-    background-color: green;
-    color: white;
+    background: var(--bg_button-hover);
+    color: var(--clr_button-hover);
   }
 }

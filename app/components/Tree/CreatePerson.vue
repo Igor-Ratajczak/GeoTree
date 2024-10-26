@@ -9,14 +9,14 @@
         rx="10"
         ry="10"
         fill="white"
-        :class="{ active: state.active_person.value === node.data.id }"
-        @click="state.active_person.value = node.data.id"
+        :class="{ active: state.active_person === node.data.id }"
+        @click="state.active_person = node.data.id"
       ></rect>
 
       <!-- Person option menu -->
       <Transition name="fade">
-        <PersonOption
-          v-if="state.active_person.value === node.data.id"
+        <TreePersonOption
+          v-if="state.active_person === node.data.id"
           :rectX="rectX"
           :rectWidth="rectWidth"
           :rectHeight="rectHeight"
@@ -31,7 +31,7 @@
         width="100%"
         height="100%"
         preserveAspectRatio="xMidYMid slice"
-        @click="state.active_person.value = node.data.id"
+        @click="state.active_person = node.data.id"
       />
       <image
         v-if="node.data.hasSpouse"
@@ -41,10 +41,10 @@
         width="100%"
         height="100%"
         preserveAspectRatio="xMidYMid slice"
-        @click="state.active_person.value = node.data.id"
+        @click="state.active_person = node.data.id"
       />
       <!-- Add person text name, about, and spouse -->
-      <AddText :x="rectX" :node="node"></AddText>
+      <TreePersonText :x="rectX" :node="node" />
     </g>
     <!-- Recursively render child nodes -->
     <CreatePerson v-for="child in node.children || []" :key="child.data.id" :node="child" />
@@ -52,12 +52,11 @@
 </template>
 
 <script setup lang="ts">
-  import PersonOption from './PersonOption.vue'
-  import AddText from './AddText.vue'
-  import { state } from '../state'
-  import { get } from './idb/manageIDB'
+  import { get } from '../../composables/useIDB'
   import defaultUserIcon from '/assets/defaultUserIcon.svg'
-  import type { HierarchyNode } from 'd3'
+  //   import type { HierarchyNode } from 'd3'
+
+  const { state } = useAppStore()
 
   // Define the props the component will receive
   const props = defineProps<{
@@ -85,7 +84,7 @@
 
   // watch if the AllFamilies is changed and update person icons
   watch(
-    () => state.AllFamilies.value,
+    () => state.AllFamilies,
     () => {
       setIcon(props.node.data.icon)
     },
@@ -93,16 +92,20 @@
   )
 
   watch(
-    () => state.active_person.value,
-    () => {
-      const node: HierarchyNode<FamilyNode> = props.node
+    () => state.active_person,
+    (newVal, oldVal) => {
+      if (oldVal === newVal) return
+      const node = props.node
       const width = window.innerWidth
       const height = window.innerHeight
-      if (state.active_person.value === node.data.id) {
-        state.transform.value = {
+
+      console.log('running')
+
+      if (newVal === node.data.id) {
+        state.transform = {
           x: width / 2 - (node.x || 0),
           y: height / 4 - (node.y || 0),
-          k: state.transform.value.k,
+          k: state.transform.k,
         }
       }
     }

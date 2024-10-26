@@ -1,8 +1,8 @@
 <template>
   <Transition name="window">
-    <div v-if="state.window.value === 'export'" id="exportData" class="window">
+    <div v-if="state.window === 'export'" id="exportData" class="window">
       <div class="title">Eksportuj dane</div>
-      <div class="close" @click="state.window.value = null">X</div>
+      <div class="close" @click="state.window = null">X</div>
       <div class="exports">
         <div class="tree_structure">
           <div class="family parent">
@@ -14,11 +14,7 @@
               @change="allFamiliesSelected()"
             />
             <label for="family">Eksportuj wszystkie rodziny</label>
-            <div
-              class="families child"
-              v-for="(family, index) in state.AllFamilies.value"
-              :key="index"
-            >
+            <div class="families child" v-for="(family, index) in state.AllFamilies" :key="index">
               <input
                 type="checkbox"
                 name="family"
@@ -40,8 +36,7 @@
 </template>
 
 <script setup lang="ts">
-  import { getAll } from '~/pages/tree/idb/manageIDB'
-  import { state } from '../../state'
+  const { state } = useAppStore()
 
   interface Data {
     icons: Icon[] | null
@@ -64,7 +59,7 @@
   // check is all family input is selected or not
   const allFamiliesSelected = () => {
     if (importAllFamilies.value === true) {
-      state.AllFamilies.value.forEach((_, index: number) => (families.value![index] = true))
+      state.AllFamilies.forEach((_, index: number) => (families.value![index] = true))
     } else {
       families.value = [null]
     }
@@ -75,7 +70,7 @@
     () => families.value,
     (newVal) => {
       // if newVal has length equal to AllFamilies in importData  and newVal has all set to true
-      if (newVal.length === state.AllFamilies.value.length && newVal.every((val) => val === true)) {
+      if (newVal.length === state.AllFamilies.length && newVal.every((val) => val === true)) {
         // set input all families to checked
         importAllFamilies.value = true
       } else {
@@ -96,8 +91,8 @@
     // check which families is checked
     const selectedFamilies =
       importAllFamilies.value === true
-        ? state.AllFamilies.value
-        : state.AllFamilies.value.filter((_, index: number) => families.value![index])
+        ? state.AllFamilies
+        : state.AllFamilies.filter((_, index: number) => families.value![index])
 
     icons.forEach((icon) => {
       if (selectedFamilies.filter((family) => family?.family?.id === icon.id)) {
@@ -106,7 +101,7 @@
     })
 
     // check is settings is checked
-    const selectedSettings = settings.value ? state.settings.value : null
+    const selectedSettings = settings.value ? state.settings : null
 
     /**
      * Converts the given data into a JSON file and prompts the user to download it.
@@ -143,7 +138,7 @@
     settings.value = null
 
     // close window
-    state.window.value = null
+    state.window = null
   }
 </script>
 

@@ -23,13 +23,15 @@
       </div>
     </div>
     <button @click="addInput">Dodaj nowe pole</button>
+    <button @click="removeInput" v-if="userData!.length > 0">Usuń ostatnie pole</button>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { state } from '../../state'
   import { watch } from 'vue'
   import defaultUserIcon from '/assets/defaultUserIcon.svg'
+
+  const { state } = useAppStore()
 
   // reference to input file
   const input = useTemplateRef('photo')
@@ -45,10 +47,10 @@
   const selectedPersonData = state.selectedPersonData
 
   // data from selected person
-  const data = props.type === 'spouse' ? selectedPersonData.value?.spouse : selectedPersonData.value
+  const data = props.type === 'spouse' ? selectedPersonData?.spouse : selectedPersonData
 
   // data icon from selected person
-  const dataIcon = props.type === 'spouse' ? state.personForm.value?.spouse : state.personForm.value
+  const dataIcon = props.type === 'spouse' ? state.personForm?.spouse : state.personForm
 
   const icon = ref(props.option === 'edit' ? dataIcon?.icon : defaultUserIcon) // icon to show in form
   const name = ref(props.option === 'edit' ? data?.name : '') // name to show in form
@@ -61,7 +63,9 @@
   const addInput = () => {
     userData.value?.push({ name: '', text: '' })
   }
-
+  const removeInput = () => {
+    userData.value?.pop()
+  }
   // on change photo in input file
   const onFileChange = (e: Event) => {
     const target = e.target as HTMLInputElement
@@ -78,13 +82,14 @@
   // watch selected person and update form
   watch(
     () => state.selectedPersonData,
-    (newValue: Ref<FamilyNode | null>) => {
-      if (newValue.value) {
-        name.value = newValue.value.name
-        birth.value = newValue.value.birth
-        death.value = newValue.value.death
-        description.value = newValue.value.description
-        userData.value = newValue.value.userData
+    (newValue: FamilyNode | null) => {
+      if (newValue) {
+        name.value = props.type === 'spouse' ? newValue.spouse?.name : newValue.name
+        birth.value = props.type === 'spouse' ? newValue.spouse?.birth : newValue.birth
+        death.value = props.type === 'spouse' ? newValue.spouse?.death : newValue.death
+        description.value =
+          props.type === 'spouse' ? newValue.spouse?.description : newValue.description
+        userData.value = props.type === 'spouse' ? newValue.spouse?.userData : newValue.userData
       }
     },
     { deep: true }
@@ -95,11 +100,11 @@
     [icon, name, birth, death, description, userData],
     (newValue) => {
       // if person is not null
-      if (selectedPersonData.value) {
+      if (selectedPersonData) {
         // if person is spouse
         if (props.type === 'spouse') {
           // update spouse data
-          state.personForm.value.spouse = {
+          state.personForm.spouse = {
             icon: newValue[0] || '',
             name: newValue[1] || '',
             birth: newValue[2] || null,
@@ -109,15 +114,15 @@
           }
         } else {
           // update person data
-          state.personForm.value = {
+          state.personForm = {
             icon: newValue[0] || '',
             name: newValue[1] || '',
             birth: newValue[2] || null,
             death: newValue[3] || null,
             description: newValue[4] || '',
             userData: newValue[5] as UserData[],
-            hasSpouse: state.personForm.value.hasSpouse,
-            spouse: state.personForm.value.spouse,
+            hasSpouse: state.personForm.hasSpouse,
+            spouse: state.personForm.spouse,
           }
         }
       }

@@ -1,6 +1,6 @@
 <template>
   <div class="title">Dane o osobie</div>
-  <div class="close" @click="state.window.value = null">X</div>
+  <div class="close" @click="state.window = null">X</div>
   <div class="details">
     <img class="icon" :src="icon" alt="person" />
     <div class="name">{{ data?.name }}</div>
@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../../state'
-  import { get } from '../../tree/idb/manageIDB'
+  import { get } from '../../composables/useIDB'
 
+  const { state } = useAppStore()
   // get selected person data
-  const data = ref(state.selectedPersonData.value)
+  const data = ref(state.selectedPersonData)
 
   const icon = ref('')
   const iconSpouse = ref('')

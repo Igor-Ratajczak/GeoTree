@@ -9,28 +9,28 @@
       <rect width="50" height="50"></rect>
       <text :x="50 / 2" :y="50 / 2 + 4" dominant-baseline="middle">+</text>
     </g>
-
     <g class="option" :transform="`translate(${0},${2})`" @click="details">
       <rect width="50" height="50"></rect>
-      <AboutIcon />
+      <image :xlink:href="AboutIcon" :x="5" y="5" width="40" height="40" />
     </g>
     <g class="option" :transform="`translate(${50},${2})`" @click="edit">
       <rect width="50" height="50"></rect>
-      <EditIcon />
+      <image :xlink:href="EditIcon" :x="5" y="5" width="40" height="40" />
     </g>
     <g class="option" :transform="`translate(${100},${2})`" @click="remove">
       <rect width="50" height="50"></rect>
-      <DeleteIcon />
+      <image :xlink:href="DeleteIcon" :x="5" y="5" width="40" height="40" />
     </g>
   </g>
 </template>
 
 <script setup lang="ts">
-  import { state } from '../state'
-  import AboutIcon from './icons/aboutIcon.vue'
-  import DeleteIcon from './icons/deleteIcon.vue'
-  import EditIcon from './icons/editIcon.vue'
-  import { get } from './idb/manageIDB'
+  import AboutIcon from '/assets/aboutIcon.svg'
+  import DeleteIcon from '/assets/deleteIcon.svg'
+  import EditIcon from '/assets/editIcon.svg'
+  import { get } from '../../composables/useIDB'
+
+  const { state } = useAppStore()
 
   const props = defineProps<{
     rectX: number
@@ -46,9 +46,9 @@
    * and hasParent to whether the node has a parent.
    */
   const add = () => {
-    state.window.value = 'person_add'
-    state.selectedPersonData.value = props.node.data
-    state.hasParent.value = props.node.parent === null ? false : true
+    state.window = 'person_add'
+    state.selectedPersonData = props.node.data
+    state.hasParent = props.node.parent === null ? false : true
   }
 
   /**
@@ -57,8 +57,8 @@
    * Set the window to person_details and selectedPersonData to the node's data.
    */
   const details = () => {
-    state.window.value = 'person_details'
-    state.selectedPersonData.value = props.node.data
+    state.window = 'person_details'
+    state.selectedPersonData = props.node.data
   }
 
   /**
@@ -73,9 +73,9 @@
   const edit = async () => {
     const { data } = props.node
     const icon = await get(data.id + '-photo')
-    state.window.value = 'person_edit'
-    state.selectedPersonData.value = data
-    state.personForm.value = {
+    state.window = 'person_edit'
+    state.selectedPersonData = data
+    state.personForm = {
       icon: icon.person,
       name: data.name,
       birth: data.birth,
@@ -86,11 +86,11 @@
       spouse: data.hasSpouse
         ? {
             icon: icon.spouse,
-            name: data.spouse.name,
-            birth: data.spouse.birth,
-            death: data.spouse.death,
-            description: data.spouse.description,
-            userData: data.spouse.userData,
+            name: data.spouse?.name || '',
+            birth: data.spouse?.birth || null,
+            death: data.spouse?.death || null,
+            description: data.spouse?.description || '',
+            userData: data.spouse?.userData || [],
           }
         : null,
     }
@@ -104,9 +104,9 @@
    * has no parent.
    */
   const remove = () => {
-    state.selectedPersonData.value = props.node.data
-    state.deletePersonParentId.value = props.node.parent ? props.node.parent.data.id : null
-    state.window.value = 'person_delete'
+    state.selectedPersonData = props.node.data
+    state.deletePersonParentId = props.node.parent ? props.node.parent.data.id : null
+    state.window = 'person_delete'
   }
 </script>
 

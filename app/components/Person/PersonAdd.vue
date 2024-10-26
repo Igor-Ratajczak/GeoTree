@@ -2,10 +2,7 @@
   <div class="title">Dodaj osobę</div>
   <div class="close" @click="close">X</div>
   <Transition name="to-left">
-    <div
-      class="add-option-person"
-      v-if="state.hasParent.value === false && optionSelected === false"
-    >
+    <div class="add-option-person" v-if="state.hasParent === false && optionSelected === false">
       <div class="option" @click="setOption('parent')">Dodaj rodziców</div>
       <div class="option" @click="setOption('child')">Dodaj dziecko</div>
     </div>
@@ -22,17 +19,19 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../../state'
-  import { updateTree } from '../../tree/updateTree'
   import PersonForm from './PersonForm.vue'
 
+  const { state } = useAppStore()
+
   const hasSpouse = ref(false)
-  const optionSelected = ref(false)
-  const option: Ref<'parent' | 'child' | null> = ref(null)
+  const optionSelected = ref(state.hasParent ? true : false)
+
+  const option: Ref<'parent' | 'child' | null> = ref(state.hasParent ? 'child' : null)
+  console.log(state.hasParent, optionSelected, hasSpouse, option)
 
   // watch if has spouse change and update this in personForm
   watch(hasSpouse, (newValue) => {
-    state.personForm.value.hasSpouse = newValue
+    state.personForm.hasSpouse = newValue
   })
 
   // Select option 'parent' or 'child' to add new person
@@ -44,7 +43,7 @@
 
   // close window and set const to default
   const close = () => {
-    state.window.value = null
+    state.window = null
     optionSelected.value = false
     hasSpouse.value = false
   }
@@ -59,13 +58,14 @@
 
     // get all values from personForm
     const newChild = {
-      name: state.personForm.value?.name,
-      birth: state.personForm.value?.birth,
-      death: state.personForm.value?.death,
-      description: state.personForm.value?.description,
-      userData: state.personForm.value?.userData,
-      hasSpouse: state.personForm.value?.hasSpouse,
-      spouse: state.personForm.value?.spouse,
+      icon: uniqueId + '-photo',
+      name: state.personForm?.name,
+      birth: state.personForm?.birth,
+      death: state.personForm?.death,
+      description: state.personForm?.description,
+      userData: state.personForm?.userData,
+      hasSpouse: state.personForm?.hasSpouse,
+      spouse: state.personForm?.spouse,
       children: [],
       id: uniqueId,
     } as FamilyNode
@@ -73,12 +73,12 @@
     // set icon unique ID and icon to person and spouse
     const icons = {
       id: uniqueId + '-photo',
-      person: state.personForm.value.icon,
-      spouse: state.personForm.value.spouse?.icon || '',
+      person: state.personForm.icon,
+      spouse: state.personForm.spouse?.icon || '',
     }
 
     // send new person data to update family tree
-    new updateTree(newChild).add(icons, option.value)
+    new Person(newChild, state.selectedPersonData!.id).add(icons, option.value!)
 
     // set const to default
     optionSelected.value = false

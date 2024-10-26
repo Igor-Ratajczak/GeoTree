@@ -1,8 +1,8 @@
 <template>
   <Transition name="notify">
-    <div v-if="state.window.value === 'person_delete'" id="deletePerson" class="message">
+    <div v-if="state.window === 'person_delete'" id="deletePerson" class="message">
       <div class="title">Jesteś pewien?</div>
-      <div class="button close" @click="state.window.value = null">Nie czekaj, pomyłka</div>
+      <div class="button close" @click="state.window = null">Nie czekaj, pomyłka</div>
 
       <button class="button delete" @click="deletePerson()">Wywalaj z drzewa</button>
     </div>
@@ -10,15 +10,14 @@
 </template>
 
 <script setup lang="ts">
-  import { state } from '../../state'
-  import { updateTree } from '../../tree/updateTree'
+  const { state } = useAppStore()
 
   /**
    * Delete person from family
    */
   const deletePerson = () => {
-    if (state.selectedPersonData.value) {
-      new updateTree(state.selectedPersonData.value).delete(state.deletePersonParentId.value)
+    if (state.selectedPersonData) {
+      new Person(null, state.selectedPersonData.id).remove(state.deletePersonParentId!)
     }
   }
 </script>
