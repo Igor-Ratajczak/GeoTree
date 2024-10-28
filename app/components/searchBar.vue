@@ -27,52 +27,9 @@
    */
   const onSearch = () => {
     searchedPeople.value = []
-    state.AllFamilies.filter((family) => {
-      if (family?.id === state.selectedFamily && family.family) filterFamily(family.family)
+    useFamily.filter(search.value).then((data) => {
+      searchedPeople.value = data
     })
-  }
-  /**
-   * Filter the family data based on the search input.
-   * @param {FamilyNode} data - The family data
-   */
-  const filterFamily = (data: FamilyNode) => {
-    if (data) {
-      // Split the search input into words
-      const words = search.value
-        .toUpperCase()
-        .split(' ')
-        .filter((word) => word)
-
-      // Check if the data matches all words
-      const matchesAllWords = words.every((word) => {
-        return (
-          // Check if the name, birth, death, description, or any user data
-          // includes the word
-          data.name.toUpperCase().includes(word) ||
-          data.birth?.toUpperCase().includes(word) ||
-          data.death?.toUpperCase().includes(word) ||
-          data.description?.toUpperCase().includes(word) ||
-          data.userData?.some((data) => data.text.toUpperCase().includes(word)) ||
-          // Check if the spouse name, birth, death, description, or any user data
-          // includes the word
-          data.spouse?.name?.toUpperCase().includes(word) ||
-          data.spouse?.birth?.toUpperCase().includes(word) ||
-          data.spouse?.death?.toUpperCase().includes(word) ||
-          data.spouse?.description?.toUpperCase().includes(word) ||
-          data.spouse?.userData?.some((data) => data.text.toUpperCase().includes(word))
-        )
-      })
-
-      // If the data matches all words and is not already in the results, add it
-      if (matchesAllWords && !searchedPeople.value.includes(data)) {
-        searchedPeople.value.push(data)
-      }
-
-      // Recursively filter the children
-      data.children?.forEach((child) => {
-        filterFamily(child)
-      })
-    }
   }
 
   /**

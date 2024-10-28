@@ -27,7 +27,6 @@
   const optionSelected = ref(state.hasParent ? true : false)
 
   const option: Ref<'parent' | 'child' | null> = ref(state.hasParent ? 'child' : null)
-  console.log(state.hasParent, optionSelected, hasSpouse, option)
 
   // watch if has spouse change and update this in personForm
   watch(hasSpouse, (newValue) => {

@@ -52,9 +52,7 @@
 </template>
 
 <script setup lang="ts">
-  import { get } from '../../composables/useIDB'
   import defaultUserIcon from '/assets/defaultUserIcon.svg'
-  //   import type { HierarchyNode } from 'd3'
 
   const { state } = useAppStore()
 
@@ -99,14 +97,13 @@
       const width = window.innerWidth
       const height = window.innerHeight
 
-      console.log('running')
-
       if (newVal === node.data.id) {
-        state.transform = {
+        const transform = {
           x: width / 2 - (node.x || 0),
           y: height / 4 - (node.y || 0),
           k: state.transform.k,
         }
+        TreeInstance.animateTree(transform)
       }
     }
   )

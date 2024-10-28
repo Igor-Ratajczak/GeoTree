@@ -33,7 +33,7 @@ export class Person {
   /** Add a person to the family tree as a parent or child */
   public add(icons: Icon, type: 'parent' | 'child') {
     if (type === 'child') {
-      const familyID = getFamily()
+      const familyID = useFamily.getIndex()
       /* Find the parent of the person */
       this.getPerson(state.AllFamilies[familyID]?.family!, this.key).then((parent) => {
         if (parent !== null) {
@@ -42,7 +42,7 @@ export class Person {
         }
       })
     } else {
-      const familyIndex = getFamily()
+      const familyIndex = useFamily.getIndex()
       if (
         state.AllFamilies[familyIndex] !== null &&
         state.AllFamilies[familyIndex] !== undefined &&
@@ -59,7 +59,7 @@ export class Person {
   }
   /** Edit a person in the family tree */
   public set(icons: Icon) {
-    const familyID = getFamily()
+    const familyID = useFamily.getIndex()
     /* Find the person in the family tree */
     this.getPerson(state.AllFamilies[familyID]?.family!, this.key).then((person) => {
       if (person !== null) {
@@ -72,7 +72,7 @@ export class Person {
   }
   /** Delete a person from the family tree */
   public remove(parentID: string) {
-    const familyID = getFamily()
+    const familyID = useFamily.getIndex()
     /* Find the parent of the person */
     this.getPerson(state.AllFamilies[familyID]?.family!, parentID).then((parent) => {
       if (parent !== null) {

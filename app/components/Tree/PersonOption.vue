@@ -39,37 +39,18 @@
     node: D3HierarchyNode<FamilyNode>
   }>()
 
-  /**
-   * Add a new person.
-   *
-   * Set the window to person_add, selectedPersonData to the node's data,
-   * and hasParent to whether the node has a parent.
-   */
   const add = () => {
     state.window = 'person_add'
     state.selectedPersonData = props.node.data
     state.hasParent = props.node.parent === null ? false : true
   }
 
-  /**
-   * Open the person details window.
-   *
-   * Set the window to person_details and selectedPersonData to the node's data.
-   */
   const details = () => {
     state.window = 'person_details'
     state.selectedPersonData = props.node.data
   }
 
-  /**
-   * Edit a person.
-   *
-   * Set the window to person_edit, selectedPersonData to the node's data,
-   * and personForm to the node's data with the icon set to the result of
-   * get(node.data.id + '-photo').
-   * If the node has a spouse, set personForm.spouse to that spouse's data.
-   * Otherwise, set personForm.spouse to null.
-   */
+  // on edit all person data must be send to personFrom
   const edit = async () => {
     const { data } = props.node
     const icon = await get(data.id + '-photo')
@@ -96,13 +77,6 @@
     }
   }
 
-  /**
-   * Remove a person.
-   *
-   * Set the window to person_delete, selectedPersonData to the node's data,
-   * and deletePersonParentId to the node's parent's id or null if the node
-   * has no parent.
-   */
   const remove = () => {
     state.selectedPersonData = props.node.data
     state.deletePersonParentId = props.node.parent ? props.node.parent.data.id : null

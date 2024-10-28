@@ -34,19 +34,17 @@
   const success = ref(false)
   const DBDeleteRequest = window.indexedDB.deleteDatabase('toDoList')
 
-  // Function to close the modal when the Esc key is pressed
+  // on press 'esc' close window
   const handleEsc = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && state.window !== null) {
-      state.window = null // Close the modal if it's open
+      state.window = null
     }
   }
 
-  // Add the Esc key listener when the component is mounted
   onMounted(() => {
     window.addEventListener('keydown', handleEsc)
   })
 
-  // Remove the Esc key listener when the component is unmounted
   onBeforeUnmount(() => {
     window.removeEventListener('keydown', handleEsc)
   })

@@ -33,9 +33,7 @@
 
   const { state } = useAppStore()
 
-  // reference to input file
   const input = useTemplateRef('photo')
-  // text to show in button
   const text = ref('Wybierz plik.')
 
   const props = defineProps<{
@@ -43,13 +41,12 @@
     option: string
   }>()
 
-  // selected person data
   const selectedPersonData = state.selectedPersonData
 
-  // data from selected person
+  // it's important!!! PersonFrom show data person or person spouse
   const data = props.type === 'spouse' ? selectedPersonData?.spouse : selectedPersonData
 
-  // data icon from selected person
+  // it's important!!! PersonFrom show icon person or person spouse
   const dataIcon = props.type === 'spouse' ? state.personForm?.spouse : state.personForm
 
   const icon = ref(props.option === 'edit' ? dataIcon?.icon : defaultUserIcon) // icon to show in form
@@ -96,14 +93,12 @@
   )
 
   // watch form and update data
+  // it's for save actual data in family tree
   watch(
     [icon, name, birth, death, description, userData],
     (newValue) => {
-      // if person is not null
       if (selectedPersonData) {
-        // if person is spouse
         if (props.type === 'spouse') {
-          // update spouse data
           state.personForm.spouse = {
             icon: newValue[0] || '',
             name: newValue[1] || '',
@@ -113,7 +108,6 @@
             userData: newValue[5] as UserData[],
           }
         } else {
-          // update person data
           state.personForm = {
             icon: newValue[0] || '',
             name: newValue[1] || '',

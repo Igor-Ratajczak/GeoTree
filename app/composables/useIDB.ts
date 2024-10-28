@@ -33,7 +33,7 @@ export async function set(
   val: string,
   valSpouse: string
 ) {
-  return (await dbPromise).put('icons', { person: val, spouse: valSpouse }, key)
+  return (await dbPromise).put('icons', { id: key, person: val, spouse: valSpouse }, key)
 }
 /**
  * Delete a person's icon from the database.
