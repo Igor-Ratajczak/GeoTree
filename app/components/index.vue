@@ -99,14 +99,4 @@
       width: 40vw;
     }
   }
-  #tree-container {
-    background-color: green;
-    height: calc(100vh - 130px);
-    width: 100%;
-  }
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
 </style>

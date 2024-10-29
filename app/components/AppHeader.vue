@@ -46,9 +46,20 @@
     display: grid;
     align-items: center;
     height: 65px;
-    background-color: #a2f10e;
     padding-left: 10px;
-    grid-template: 100% / 30% 60% 10%;
+    grid-template: 100% / 20em auto 3em 350px;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 150px -50px white;
+      z-index: -1;
+    }
 
     .logo {
       display: flex;
@@ -86,16 +97,17 @@
       }
       .menu-items {
         position: absolute;
-        top: 100%;
-        left: -100%;
-        transform: translate(10%, 0%);
+        left: 50%;
+        transform: translate(-50%, 0);
         background-color: rgba(0, 0, 0, 0.809);
+        min-width: 15em;
         width: 150%;
         border-radius: 15px;
         padding: 10px;
         display: flex;
         flex-direction: column;
         gap: 10px;
+        box-shadow: 0 0 50px white;
 
         .item {
           background-color: rgb(72, 72, 72);

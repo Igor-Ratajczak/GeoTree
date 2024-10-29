@@ -51,6 +51,7 @@
     display: grid;
     height: 100%;
     position: relative;
+    justify-items: center;
 
     .search {
       width: 60%;

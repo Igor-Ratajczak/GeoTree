@@ -60,7 +60,6 @@
   }
 
   #tree-container {
-    background-color: green;
     height: calc(100vh - 130px);
     width: 100%;
   }
