@@ -8,7 +8,6 @@
         :x="rectX"
         rx="10"
         ry="10"
-        fill="white"
         :class="{ active: state.active_person === node.data.id }"
         @click="state.active_person = node.data.id"
       ></rect>
@@ -127,6 +126,7 @@
       stroke: black;
       stroke-width: 5;
       transition: all 0.5s ease;
+      fill: var(--bg_svg_box);
 
       &.active {
         stroke: red;
@@ -134,7 +134,7 @@
       }
 
       &:hover {
-        fill: #a2f10e;
+        fill: var(--bg_svg_box_hover);
       }
     }
     image {
@@ -144,7 +144,7 @@
     }
     &:has(text.text:hover) > rect,
     &:has(image:hover) > rect {
-      fill: #a2f10e;
+      fill: var(--bg_svg_box_hover);
     }
   }
 </style>

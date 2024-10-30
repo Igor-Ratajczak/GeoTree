@@ -16,12 +16,18 @@
       </div>
       <div class="menu-items" v-if="menu" @click="console.log(state.AllFamilies)">
         <div class="item" @click="useAppStore().state.window = 'families'">
-          Zarządzanie rodzinami
+          <span>Zrządzanie rodzinami</span>
         </div>
-        <div class="item" @click="useAppStore().state.window = 'import'">Import danych</div>
-        <div class="item" @click="useAppStore().state.window = 'export'">Export danych</div>
-        <div class="item" @click="useAppStore().state.window = 'settings'">Ustawienia</div>
-        <div class="item" @click="useAppStore().state.window = 'about'">O GenTree</div>
+        <div class="item" @click="useAppStore().state.window = 'import'">
+          <span>Import danych</span>
+        </div>
+        <div class="item" @click="useAppStore().state.window = 'export'">
+          <span>Export danych</span>
+        </div>
+        <div class="item" @click="useAppStore().state.window = 'settings'">
+          <span>Ustawienia</span>
+        </div>
+        <div class="item" @click="useAppStore().state.window = 'about'"><span>O GenTree</span></div>
       </div>
     </div>
   </div>
@@ -48,18 +54,6 @@
     height: 65px;
     padding-left: 10px;
     grid-template: 100% / 20em auto 3em 350px;
-    position: relative;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      box-shadow: inset 0 0 150px -50px white;
-      z-index: -1;
-    }
 
     .logo {
       display: flex;
@@ -99,7 +93,7 @@
         position: absolute;
         left: 50%;
         transform: translate(-50%, 0);
-        background-color: rgba(0, 0, 0, 0.809);
+        background-color: var(--bg_menu);
         min-width: 15em;
         width: 150%;
         border-radius: 15px;
@@ -107,18 +101,18 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-        box-shadow: 0 0 50px white;
+        box-shadow: 0 0 50px var(--clr_menu);
 
         .item {
-          background-color: rgb(72, 72, 72);
-          color: white;
+          color: var(--clr_menu);
+          background-color: #00000000;
           padding: 5px;
           border-radius: 25px;
           text-align: center;
           cursor: pointer;
 
           &:hover {
-            background-color: rgb(116, 116, 116);
+            background-color: var(--bg_menu_hover);
           }
         }
       }

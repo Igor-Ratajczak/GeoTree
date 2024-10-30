@@ -73,5 +73,6 @@
 <style scoped>
   text {
     font-family: sans-serif;
+    fill: var('--clr_svg_box');
   }
 </style>
