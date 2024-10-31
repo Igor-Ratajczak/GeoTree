@@ -87,11 +87,11 @@
 <style scoped lang="less">
   .option {
     &:hover rect {
-      fill: lightblue;
+      fill: var(--bg_svg_box_option_hover);
     }
     rect {
-      fill: white;
-      stroke: black;
+      fill: var(--bg_svg_box_option);
+      stroke: var(--clr_svg_box_option);
       stroke-width: 5;
     }
     text {
@@ -99,11 +99,6 @@
       font-size: 45px;
       font-family: sans-serif;
       fill: black;
-
-      &.delete {
-        fill: red;
-        font-family: fantasy;
-      }
     }
   }
 </style>

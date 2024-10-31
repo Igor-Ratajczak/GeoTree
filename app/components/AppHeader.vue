@@ -110,6 +110,7 @@
           border-radius: 25px;
           text-align: center;
           cursor: pointer;
+          font-weight: 900;
 
           &:hover {
             background-color: var(--bg_menu_hover);

@@ -129,7 +129,7 @@
       fill: var(--bg_svg_box);
 
       &.active {
-        stroke: red;
+        stroke: var(--bg_svg_box_active);
         stroke-width: 10;
       }
 

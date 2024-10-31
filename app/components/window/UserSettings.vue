@@ -4,9 +4,17 @@
       <div class="title">Ustawienia</div>
       <div class="close" @click="state.window = null">X</div>
       <div class="content">
-        <div class="setting" v-for="(setting, index) in settings" :key="setting.name">
-          <div class="name">{{ setting.name }}</div>
-          <input type="color" v-model="setting.value" @input="updateSettings(index)" />
+        <div class="setting-list" v-for="settings in settingsList" :key="settings.id">
+          <div class="setting-title">{{ settings.title }}</div>
+          <div class="setting" v-for="setting in settings.data" :key="setting.id">
+            <div class="name">{{ setting.name }}:</div>
+            <input
+              type="color"
+              v-model="setting.value"
+              @input="updateSettings(settings.id, setting.id)"
+            />
+            <div class="reset" @click="resetSetting(settings.id, setting.id)">Przywróć kolor</div>
+          </div>
         </div>
       </div>
     </div>
@@ -14,72 +22,103 @@
 </template>
 
 <script setup lang="ts">
+  import { settingsList } from '~/composables/useSettings'
   const { state } = useAppStore()
 
-  type Setting =
-    | 'bg_main'
-    | 'clr_main'
-    | 'bg_window'
-    | 'clr_window'
-    | 'bg_input_file_button'
-    | 'clr_input_file_button'
-    | 'bg_input_file_button_hover'
-    | 'clr_input_file_button_hover'
-    | 'bg_svg_box'
-    | 'clr_svg_box'
-    | 'bg_svg_box_hover'
-    | 'bg_menu'
-    | 'bg_menu_hover'
-    | 'clr_menu'
-
-  type Settings = {
-    [name in Setting]: {
-      name: string
-      default: string
-      value: string
+  // Poniższa funkcja aktualizuje style body na podstawie ustawień
+  const updateSettings = (categoryId: SettingsList, settingId: string) => {
+    const setting = settingsList[categoryId].data.find((data) => data.id === settingId)
+    if (setting) {
+      document.body.style.setProperty(`--${settingId}`, setting.value)
     }
   }
-  const settings: Settings = {
-    bg_main: { name: 'Tło', default: '#008000', value: '#008000' },
-    clr_main: { name: 'kolor tekstu', default: '#333333', value: '#333333' },
-    bg_window: { name: 'Kolor tła okna', default: '#f5f5f5', value: '#f5f5f5' },
-    clr_window: { name: 'Kolor tekstu okna', default: '#000000', value: '#000000' },
-    bg_input_file_button: { name: 'Kolor przycisku pliku', default: '#008000', value: '#008000' },
-    clr_input_file_button: {
-      name: 'Kolor tekstu przycisku pliku',
-      default: '#ffffff',
-      value: '#ffffff',
-    },
-    bg_input_file_button_hover: {
-      name: 'Kolor przycisku pliku po najechaniu',
-      default: '#008000',
-      value: '#008000',
-    },
-    clr_input_file_button_hover: {
-      name: 'Kolor tekstu przycisku pliku po najechaniu',
-      default: '#ffffff',
-      value: '#ffffff',
-    },
-    bg_svg_box: { name: 'Kolor tła osób', default: '#ffffff', value: '#ffffff' },
-    clr_svg_box: { name: 'Kolor tekstu osób', default: '#000000', value: '#000000' },
-    bg_svg_box_hover: {
-      name: 'Kolor tła osób po najechaniu',
-      default: '#a2f10e',
-      value: '#a2f10e',
-    },
-    bg_menu: { name: 'Kolor tła menu', default: '#44c708', value: '#44c708' },
-    bg_menu_hover: { name: 'Kolor tła menu po najechaniu', default: '#01aa01', value: '#01aa01' },
-    clr_menu: { name: 'Kolor tekstu menu', default: '#000000', value: '#000000' },
+
+  // Funkcja resetująca ustawienie do wartości domyślnej
+  const resetSetting = (categoryId: SettingsList, settingId: string) => {
+    const setting = settingsList[categoryId].data.find((data) => data.id === settingId)
+    if (setting) {
+      setting.value = setting.default
+      updateSettings(categoryId, settingId)
+    }
   }
 
-  const changedSettings: Ref<Setting[]> = ref([])
-  const updateSettings = (type: Setting) => {
-    let styleData = ''
-    if (!changedSettings.value.includes(type)) changedSettings.value.push(type)
+  // Funkcja ładująca ustawienia zapisane w state
+  const loadSettings = () => {
+    if (state.settings) {
+      state.settings.forEach((savedSetting) => {
+        const setting = settingsList[savedSetting.id].data.find(
+          (data) => data.id === savedSetting.name
+        )
+        if (setting) setting.value = savedSetting.value
+      })
+    }
 
-    changedSettings.value.forEach((setting) => {
-      styleData += '--' + setting + ':' + settings[setting!].value + ';'
+    // Zastosowanie wszystkich stylów po wczytaniu
+    Object.values(settingsList).forEach((category) => {
+      category.data.forEach((setting) => {
+        document.body.style.setProperty(`--${setting.id}`, setting.value)
+      })
     })
-    document.body.setAttribute('style', styleData)
   }
+
+  onMounted(() => {
+    loadSettings()
+  })
 </script>
+
+<style scoped lang="less">
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    overflow-y: auto;
+    text-align: center;
+    padding-bottom: 5em;
+    grid-column: 1/3;
+
+    .setting-list {
+      display: grid;
+      gap: 2em;
+
+      .setting-title {
+        font-size: 35px;
+        font-weight: 900;
+      }
+
+      .setting {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2em;
+        padding: 0 3em 0 3em;
+        align-items: center;
+        height: calc(100% + 50px);
+
+        input {
+          width: 50px;
+          height: 50px;
+          accent-color: green;
+          border-radius: 25px;
+          border: none;
+          outline: 5px solid black;
+          cursor: pointer;
+        }
+
+        .reset {
+          width: max-content;
+          padding: 10px;
+          height: max-content;
+          border-radius: 15px;
+          border: 5px solid red;
+          font-size: 13px;
+          font-weight: 900;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: red;
+          }
+        }
+      }
+    }
+  }
+</style>

@@ -59,6 +59,8 @@
       border: none;
       border-radius: 20px 20px 0 0px;
       padding: 0 10px;
+      background-color: var(--bg_input_search);
+      color: var(--clr_input_search);
 
       &:focus {
         border: 5px solid green;
@@ -89,12 +91,14 @@
         padding: 0 10px;
         cursor: pointer;
         height: 2em;
-        background-color: rgba(243, 240, 240, 0.849);
+        background-color: var(--bg_search_hint);
+        color: var(--clr_search_hint);
         transition: all 0.5s ease;
         border-bottom: 2px solid black;
 
         &:hover {
-          background-color: rgb(25, 245, 25);
+          background-color: var(--bg_search_hint_hover);
+          color: var(--clr_search_hint_hover);
         }
         &:is(:last-child) {
           border-radius: 0 0 20px 20px;

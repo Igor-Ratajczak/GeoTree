@@ -25,7 +25,8 @@ export interface State {
   settings:
     | [
         {
-          name: string
+          id: SettingsList
+          name: Setting
           value: string
         }
       ]
