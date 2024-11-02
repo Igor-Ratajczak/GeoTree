@@ -96,7 +96,15 @@
       width: 0;
     }
     100% {
-      width: 40vw;
+      @media screen and (min-width: 768px) {
+        width: 100vw;
+      }
+      @media screen and (min-width: 1200px) {
+        width: 60vw;
+      }
+      @media screen and (min-width: 1600px) {
+        width: 40vw;
+      }
     }
   }
 </style>

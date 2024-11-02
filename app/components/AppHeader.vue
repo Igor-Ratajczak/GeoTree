@@ -14,20 +14,20 @@
           <line x1="0" y1="80" x2="100" y2="80" stroke="black" stroke-width="10"></line>
         </svg>
       </div>
-      <div class="menu-items" v-if="menu" @click="console.log(state.AllFamilies)">
-        <div class="item" @click="useAppStore().state.window = 'families'">
+      <div class="menu-items" v-if="menu">
+        <div class="item" @click="setWindow('families')">
           <span>Zrządzanie rodzinami</span>
         </div>
-        <div class="item" @click="useAppStore().state.window = 'import'">
+        <div class="item" @click="setWindow('import')">
           <span>Import danych</span>
         </div>
-        <div class="item" @click="useAppStore().state.window = 'export'">
+        <div class="item" @click="setWindow('export')">
           <span>Export danych</span>
         </div>
-        <div class="item" @click="useAppStore().state.window = 'settings'">
+        <div class="item" @click="setWindow('settings')">
           <span>Ustawienia</span>
         </div>
-        <div class="item" @click="useAppStore().state.window = 'about'"><span>O GenTree</span></div>
+        <div class="item" @click="setWindow('about')"><span>O GenTree</span></div>
       </div>
     </div>
   </div>
@@ -45,6 +45,11 @@
   document.body.addEventListener('click', (e: MouseEvent) => {
     if (!menuItems.value?.contains(e.target as Node | null)) menu.value = false
   })
+
+  const setWindow = (window: WindowTypes) => {
+    state.window = window
+    menu.value = false
+  }
 </script>
 
 <style scoped lang="less">
@@ -53,8 +58,14 @@
     align-items: center;
     height: 65px;
     padding-left: 10px;
-    grid-template: 100% / 20em auto 3em 350px;
+    grid-template: 100% / auto auto auto;
 
+    @media screen and (min-width: 1500px) {
+      grid-template: 100% / auto auto auto 350px;
+    }
+    @media screen and (min-width: 768px) {
+      grid-template: 100% / auto auto auto 150px;
+    }
     .logo {
       display: flex;
       height: 100%;
@@ -70,6 +81,10 @@
       h1 {
         height: 100%;
         align-content: center;
+
+        @media screen and (max-width: 350px) {
+          display: none;
+        }
       }
     }
     .menu {
@@ -91,17 +106,21 @@
       }
       .menu-items {
         position: absolute;
-        left: 50%;
-        transform: translate(-50%, 0);
+        right: 0;
         background-color: var(--bg_menu);
         min-width: 15em;
-        width: 150%;
         border-radius: 15px;
         padding: 10px;
         display: flex;
         flex-direction: column;
         gap: 10px;
         box-shadow: 0 0 50px var(--clr_menu);
+        z-index: 100000;
+
+        @media screen and (min-width: 768px) {
+          left: 50%;
+          transform: translate(-50%, 0);
+        }
 
         .item {
           color: var(--clr_menu);

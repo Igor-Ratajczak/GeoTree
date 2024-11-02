@@ -1,7 +1,7 @@
 <template>
   <Transition name="window">
     <div v-if="state.window === 'families'" id="manage_families" class="window">
-      <div class="title" @click="console.log(state.AllFamilies)">Zarządzanie rodzinami</div>
+      <div class="title">Zarządzanie rodzinami</div>
       <div class="close" @click="state.window = null">X</div>
       <div class="content">
         <div class="button" id="addFamily" @click="addFamily">+ Nowa rodzina</div>
@@ -89,7 +89,7 @@
 
     .content {
       padding: 10px;
-      font-size: max(1.5rem, 50px, 1em);
+      font-size: calc(var(--font-size) + 5px);
       user-select: text;
       grid-column: 1/3;
       display: flex;
@@ -118,7 +118,7 @@
         grid-template-columns: 1fr 5fr 1fr 1fr;
         align-items: center;
         width: 80%;
-        height: 2em;
+        height: max-content;
         gap: 10px;
         padding: 10px;
         background-color: #333;
@@ -151,13 +151,19 @@
           font-weight: 900;
           border-radius: 5px;
         }
+
         .button {
-          width: 60px;
-          height: 60px;
+          width: calc(var(--font-size) + 30px);
+          height: calc(var(--font-size) + 30px);
           display: grid;
           justify-items: center;
           align-items: center;
           outline-color: green;
+
+          span {
+            font-size: calc(var(--font-size) + 5px);
+            font-weight: 900;
+          }
         }
       }
     }

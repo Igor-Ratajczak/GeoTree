@@ -23,6 +23,7 @@
   --clr_search_hint: #000000;
   --bg_search_hint_hover: #19f519;
   --clr_search_hint_hover: #000000;
+  --font-size: 30px;
 }
 
 *,
@@ -62,9 +63,7 @@ svg * {
 
 .window {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   background-color: var(--bg_window);
   color: var(--clr_window);
@@ -73,13 +72,25 @@ svg * {
   grid-template: 80px auto / auto 60px;
   overflow: hidden;
   box-shadow: 0 0 50px 20px rgb(20, 20, 20);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  @media screen and (max-width: 550px) {
+    --font-size: 10px;
+  }
 
   @media screen and (min-width: 768px) {
+    width: 80vw;
+    height: 80vh;
+  }
+  @media screen and (min-width: 1200px) {
+    width: 60vw;
+    height: 80vh;
+  }
+  @media screen and (min-width: 1600px) {
     width: 40vw;
     height: 80vh;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 
   &:not(#addPerson) > * {
@@ -118,7 +129,7 @@ svg * {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 40px;
+    font-size: calc(var(--font-size) + 8px);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     border-bottom: 2px solid black;
   }
@@ -160,6 +171,8 @@ svg * {
   width: 100%;
   height: 3em;
   justify-items: center;
+  display: grid;
+  margin-bottom: 2em;
 
   button {
     background-color: var(--bg_input_file_button);
@@ -173,7 +186,7 @@ svg * {
 
     &:hover {
       background-color: var(--bg_input_file_button_hover);
-      color: var(--clr_input_file_button_hover);
+      color: var(--clr_input_file_button_hover) !important;
     }
   }
 

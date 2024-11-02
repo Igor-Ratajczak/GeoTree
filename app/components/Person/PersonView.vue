@@ -118,6 +118,7 @@
       .user-data {
         display: flex;
         gap: 2em;
+        width: 80%;
 
         .name {
           font-size: 1.5rem;
@@ -128,6 +129,7 @@
           font-size: 1.5rem;
           font-weight: 900;
           border: none;
+          word-break: break-all;
         }
       }
     }

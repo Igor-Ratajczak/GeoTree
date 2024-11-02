@@ -40,34 +40,56 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: max-content;
-    height: 200px;
-    grid-template: 60px auto / 50% 50%;
+    height: max-content;
+    grid-template: calc(var(--font-size_message) + 20px) auto / 50% 50%;
     background-color: #353434;
     color: white;
     border-radius: 25px;
-    padding: 20px 50px;
+    padding: calc(var(--font-size_message)) calc(var(--font-size_message) + 20px);
     gap: 10px;
     box-shadow: 0 0 100px 10px white;
+    --font-size_message: 30px;
 
+    @media screen and (max-width: 850px) {
+      --font-size_message: 25px;
+    }
+    @media screen and (max-width: 650px) {
+      --font-size_message: 23px;
+    }
+    @media screen and (max-width: 600px) {
+      --font-size_message: 20px;
+    }
+    @media screen and (max-width: 500px) {
+      --font-size_message: 17px;
+    }
+    @media screen and (max-width: 400px) {
+      display: flex;
+      flex-direction: column;
+      gap: 2em;
+      --font-size_message: 20px;
+    }
+    @media screen and (max-width: 300px) {
+      --font-size_message: 17px;
+    }
     .title {
       grid-column: 1/3;
       grid-row: 1/2;
       justify-self: center;
       align-self: center;
-      font-size: 2rem;
+      font-size: var(--font-size_message);
       font-weight: 900;
     }
 
     .button {
       background-color: #111111;
       color: white;
-      padding: 20px 50px;
+      padding: calc(var(--font-size_message) - 10px) calc(var(--font-size_message) + 20px);
       width: max-content;
       border-radius: 25px;
       cursor: pointer;
       justify-self: center;
       align-self: center;
-      font-size: 1.5rem;
+      font-size: calc(var(--font-size_message) - 10px);
       font-weight: 900;
 
       &:hover {

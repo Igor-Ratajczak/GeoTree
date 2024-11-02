@@ -25,7 +25,6 @@
   import { settingsList } from '~/composables/useSettings'
   const { state } = useAppStore()
 
-  // Poniższa funkcja aktualizuje style body na podstawie ustawień
   const updateSettings = (categoryId: SettingsList, settingId: string) => {
     const setting = settingsList[categoryId].data.find((data) => data.id === settingId)
     if (setting) {
@@ -33,7 +32,6 @@
     }
   }
 
-  // Funkcja resetująca ustawienie do wartości domyślnej
   const resetSetting = (categoryId: SettingsList, settingId: string) => {
     const setting = settingsList[categoryId].data.find((data) => data.id === settingId)
     if (setting) {
@@ -42,7 +40,6 @@
     }
   }
 
-  // Funkcja ładująca ustawienia zapisane w state
   const loadSettings = () => {
     if (state.settings) {
       state.settings.forEach((savedSetting) => {
@@ -53,7 +50,6 @@
       })
     }
 
-    // Zastosowanie wszystkich stylów po wczytaniu
     Object.values(settingsList).forEach((category) => {
       category.data.forEach((setting) => {
         document.body.style.setProperty(`--${setting.id}`, setting.value)
@@ -81,7 +77,7 @@
       gap: 2em;
 
       .setting-title {
-        font-size: 35px;
+        font-size: calc(var(font-size) + 10px);
         font-weight: 900;
       }
 
@@ -92,6 +88,11 @@
         padding: 0 3em 0 3em;
         align-items: center;
         height: calc(100% + 50px);
+
+        @media screen and (max-width: 500px) {
+          grid-template: 1fr 1fr 1fr / 100%;
+          justify-items: center;
+        }
 
         input {
           width: 50px;

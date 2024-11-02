@@ -90,6 +90,18 @@ declare global {
   type Settings = {
     [name in SettingsList]: { id: SettingsList; title: string; data: SettingsItem[] }
   }
+
+  type WindowTypes =
+    | 'person_add'
+    | 'person_details'
+    | 'person_edit'
+    | 'person_delete'
+    | 'families'
+    | 'import'
+    | 'export'
+    | 'settings'
+    | 'about'
+    | null
 }
 
 export {}

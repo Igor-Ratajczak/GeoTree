@@ -7,17 +7,7 @@ export interface State {
   hasParent: boolean | null
   AllFamilies: Array<Family | null>
   selectedFamily: string
-  window:
-    | 'person_add'
-    | 'person_details'
-    | 'person_edit'
-    | 'person_delete'
-    | 'families'
-    | 'import'
-    | 'export'
-    | 'settings'
-    | 'about'
-    | null
+  window: WindowTypes
 
   active_person: string | null
   old_active_person: string | null
