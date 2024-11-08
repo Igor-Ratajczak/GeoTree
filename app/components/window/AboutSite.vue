@@ -11,8 +11,7 @@
             <li><b>Nieograniczona liczba drzew genealogicznych:</b> Możliwość tworzenia i zarządzania wieloma drzewami genealogicznymi, co jest idealne dla osób badających różne linie rodzinne.</li>
             <li><b>Intuicyjny interfejs:</b>  Prosty i wygodny interfejs ułatwia dodawanie nowych członków rodziny, śledzenie ich powiązań oraz przeglądanie całej genealogii.</li>
             <li><b>Personalizacja kolorów:</b>  Jeśli nie odpowiadają domyślne kolory wykorzystywane w drzewie genealogicznym, można je łatwo dostosować w ustawieniach. Możliwość zmiany kolorystyki drzew pozwala na pełną personalizację.</li>
-            <li>  <b>Wyszukiwanie i filtry:</b>  Zaawansowane opcje wyszukiwania i filtrowania pozwalają szybko znaleźć konkretne osoby i powiązania w rozbudowanych drzewach genealogicznych.</li>
-            <li> <b>Bezpieczeństwo danych:</b>  Dane są chronione z użyciem najnowszych technologii bezpieczeństwa, co zapewnia pełną prywatność i ochronę informacji wrażliwych.</li>
+            <li><b>Wyszukiwanie i filtry:</b>  Zaawansowane opcje wyszukiwania i filtrowania pozwalają szybko znaleźć konkretne osoby i powiązania w rozbudowanych drzewach genealogicznych.</li>
             <li><b>Udostępnianie i współpraca:</b>  Można zaprosić innych członków rodziny do współtworzenia drzewa, co ułatwia wspólne gromadzenie informacji i uzupełnianie genealogii.</li></ul>
         <p>Wersja: 1.0.0</p>
       </div>
