@@ -1,75 +1,14 @@
-# Nuxt 3 Minimal Starter
+# GenTree Drzewo Genealogiczne
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## GenTree 
+  to platforma internetowa, która umożliwia tworzenie, zarządzanie i personalizację drzew genealogicznych. Dzięki tej stronie można stworzyć kompleksowe genealogie bez ograniczeń co do liczby rodzin i ich gałęzi.
+### Kluczowe funkcje:
 
-## Setup
+1. **Nieograniczona liczba drzew genealogicznych:** Możliwość tworzenia i zarządzania wieloma drzewami genealogicznymi, co jest idealne dla osób badających różne linie rodzinne.
+2. **Intuicyjny interfejs:** Prosty i wygodny interfejs ułatwia dodawanie nowych członków rodziny, śledzenie ich powiązań oraz przeglądanie całej genealogii.
+3. **Personalizacja kolorów:** Jeśli nie odpowiadają domyślne kolory wykorzystywane w drzewie genealogicznym, można je łatwo dostosować w ustawieniach. Możliwość zmiany kolorystyki drzew pozwala na pełną personalizację.
+4. **Wyszukiwanie i filtry:** Zaawansowane opcje wyszukiwania i filtrowania pozwalają szybko znaleźć konkretne osoby i powiązania w rozbudowanych drzewach genealogicznych.
+5. **Udostępnianie i współpraca:** Można zaprosić innych członków rodziny do współtworzenia drzewa, co ułatwia wspólne gromadzenie informacji i uzupełnianie genealogii.
 
-Make sure to install the dependencies:
 
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+#### Wersja: 1.0.0
