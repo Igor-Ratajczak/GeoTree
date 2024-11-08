@@ -1,8 +1,11 @@
 <template>
   <div id="tree-container" ref="containerRef">
+    <div v-if="checkFamilyIsEmpty">
+      <TreeAddNewPersonToEmptyFamily/>
+    </div>
     <svg ref="svgRef">
       <g ref="gRef">
-        <g>
+        <g v-if="!checkFamilyIsEmpty">
           <Transition>
             <TreeLinks v-if="treeData" :node="treeData" />
           </Transition>
@@ -20,6 +23,8 @@
 
   const { state } = useAppStore()
 
+  const checkFamilyIsEmpty = ref(state.AllFamilies[useFamily.getIndex()]?.family === null)
+
   const containerRef = useTemplateRef('containerRef')
   const svgRef = useTemplateRef('svgRef')
   const gRef = useTemplateRef('gRef')
@@ -33,9 +38,10 @@
 
   // watch for update tree
   watch(
-    () => [state.selectedFamily, state.AllFamilies],
+    () => [state.selectedFamily, state.AllFamilies, checkFamilyIsEmpty],
     () => {
       setTree()
+      checkFamilyIsEmpty.value = state.AllFamilies[useFamily.getIndex()]?.family === null;
     },
     {
       deep: true,

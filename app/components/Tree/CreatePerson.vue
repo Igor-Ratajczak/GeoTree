@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-  import defaultUserIcon from '/assets/defaultUserIcon.svg'
+  import defaultUserIcon from '/assets/defaultUserIcon.png'
 
   const { state } = useAppStore()
 
@@ -80,8 +80,7 @@
   setIcon(props.node.data.icon)
 
   // watch if the AllFamilies is changed and update person icons
-  watch(
-    () => state.AllFamilies,
+  watch(() => [state.AllFamilies, state.selectedFamily],
     () => {
       setIcon(props.node.data.icon)
     },

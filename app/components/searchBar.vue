@@ -176,6 +176,9 @@
         border: 5px solid green;
         border-bottom: none;
       }
+      &:not(:focus) ~ .hint {
+        display: none;
+      }
     }
 
     .hint {
@@ -190,8 +193,13 @@
       z-index: 10;
 
       @media screen and (max-width: 768px) {
-        width: 60%;
-        left: 41px;
+        border-top: 5px solid black;
+        border-radius: 0;
+        width: 100%;
+
+        .person {
+          border-radius: 0 !important;
+        }
       }
 
       &.active {

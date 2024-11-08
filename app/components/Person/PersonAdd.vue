@@ -2,12 +2,12 @@
   <div class="title">Dodaj osobę</div>
   <div class="close" @click="close">X</div>
   <Transition name="to-left">
-    <div class="add-option-person" v-if="state.hasParent === false && optionSelected === false">
+    <div class="add-option-person" v-if="option === null">
       <div class="option" @click="setOption('parent')">Dodaj rodziców</div>
       <div class="option" @click="setOption('child')">Dodaj dziecko</div>
     </div>
   </Transition>
-  <div class="form" v-if="optionSelected">
+  <div class="form" v-if="option !== null">
     <PersonForm :type="'person'" :option="'add'" />
     <div id="spouse" class="checkbox">
       <input type="checkbox" name="isSpouse" id="isSpouse" v-model="hasSpouse" />
@@ -24,11 +24,10 @@
   const { state } = useAppStore()
 
   const hasSpouse = ref(false)
-  const optionSelected = ref(state.hasParent ? true : false)
 
-  const option: Ref<'parent' | 'child' | null> = ref(state.hasParent ? 'child' : null)
+  const option: Ref<'parent' | 'child' | null> = ref(state.addOptionPerson)
 
-  // watch if has spouse change and update this in personForm
+  // watch if it has spouse change and update this in personForm
   watch(hasSpouse, (newValue) => {
     state.personForm.hasSpouse = newValue
   })
@@ -37,13 +36,11 @@
   const setOption = (val: 'parent' | 'child') => {
     if (val === 'parent') hasSpouse.value = true
     option.value = val
-    optionSelected.value = true
   }
 
   // close window and set const to default
   const close = () => {
     state.window = null
-    optionSelected.value = false
     hasSpouse.value = false
   }
 
@@ -80,7 +77,6 @@
     new Person(newChild, state.selectedPersonData!.id).add(icons, option.value!)
 
     // set const to default
-    optionSelected.value = false
     hasSpouse.value = false
     option.value = null
   }

@@ -9,10 +9,10 @@
     }}
   </text>
   <text class="text" :x="x + 150" y="80" font-size="20" @click="state.active_person = node.data.id">
-    ur. {{ node.data.birth !== null ? node.data.birth : 'nie znana' }}
+    ur. {{ node.data.birth !== '' ? node.data.birth : 'nie znana' }}
   </text>
   <text
-    v-if="node.data.death !== null"
+    v-if="node.data.death !== ''"
     class="text"
     :x="x + 150"
     y="110"
@@ -46,10 +46,10 @@
     @click="state.active_person = node.data.id"
   >
     ur.
-    {{ node.data.spouse?.birth === null ? 'nie znana' : node.data.spouse?.birth }}
+    {{ node.data.spouse?.birth === '' ? 'nie znana' : node.data.spouse?.birth }}
   </text>
   <text
-    v-if="node.data.hasSpouse === true && node.data.spouse && node.data.spouse.death !== null"
+    v-if="node.data.hasSpouse && node.data.spouse && node.data.spouse.death !== ''"
     class="text"
     :x="x + 440"
     y="110"

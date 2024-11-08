@@ -43,6 +43,7 @@
     state.window = 'person_add'
     state.selectedPersonData = props.node.data
     state.hasParent = props.node.parent === null ? false : true
+    state.addOptionPerson = props.node.parent === null ? null : 'child'
   }
 
   const details = () => {
@@ -56,24 +57,30 @@
     const icon = await get(data.id + '-photo')
     state.window = 'person_edit'
     state.selectedPersonData = data
+    if(data.spouse === null)
+    state.selectedPersonData.spouse = {
+      name: '',
+      birth: null,
+      death: null,
+      description: '',
+      userData: [],
+    }
     state.personForm = {
-      icon: icon.person,
-      name: data.name,
-      birth: data.birth,
-      death: data.death,
-      description: data.description,
-      userData: data.userData,
-      hasSpouse: data.hasSpouse,
-      spouse: data.hasSpouse
-        ? {
-            icon: icon.spouse,
+      icon: icon ? icon.person : '',
+      name: data.name || '',
+      birth: data.birth || '',
+      death: data.death || '',
+      description: data.description || '',
+      userData: data.userData || [],
+      hasSpouse: data.hasSpouse || false,
+      spouse: {
+            icon: icon ? icon.spouse : '',
             name: data.spouse?.name || '',
             birth: data.spouse?.birth || null,
             death: data.spouse?.death || null,
             description: data.spouse?.description || '',
             userData: data.spouse?.userData || [],
           }
-        : null,
     }
   }
 

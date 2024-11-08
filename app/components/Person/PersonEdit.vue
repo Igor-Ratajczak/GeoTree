@@ -22,7 +22,17 @@
   watch(
     () => state.selectedPersonData,
     (newValue: FamilyNode | null) => {
-      if (newValue) hasSpouse.value = newValue.hasSpouse
+      if (newValue) {
+        hasSpouse.value = newValue.hasSpouse
+        state.personForm.spouse = {
+          icon: '',
+          name: '',
+          birth: '',
+          death: '',
+          description: '',
+          userData: [],
+        }
+      }
     },
     { deep: true }
   )
@@ -31,6 +41,16 @@
     hasSpouse,
     (newValue) => {
       state.personForm.hasSpouse = newValue
+      if (newValue) {
+        state.personForm.spouse = {
+          icon: '',
+          name: '',
+          birth: '',
+          death: '',
+          description: '',
+          userData: [],
+        }
+      }
     },
     { deep: true }
   )
@@ -47,7 +67,7 @@
       userData: state.personForm?.userData,
       hasSpouse: state.personForm?.hasSpouse,
       spouse: state.personForm?.spouse,
-      children: [],
+      children: state.selectedPersonData?.children || [],
       id: state.selectedPersonData?.id,
     } as FamilyNode
 

@@ -104,6 +104,7 @@
         display: grid;
         place-items: center;
         transition: all 0.5s ease;
+        min-height: 3em;
 
         &:hover {
           background-color: hsl(120, 90%, 69%);

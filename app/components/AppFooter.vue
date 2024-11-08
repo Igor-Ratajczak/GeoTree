@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <div class="copyright">GeoTree &copy; {{ new Date().getFullYear() }} by Igor Ratajczak</div>
+    <div class="copyright">GeoTree &copy; {{ new Date().getFullYear() }} by Igor Ratajczak All Rights Reserved</div>
   </div>
 </template>
 

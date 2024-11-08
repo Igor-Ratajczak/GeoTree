@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="logo">
-      <img src="/assets/logo.jpg" alt="logo GenTree" />
+      <img :src="Logo" alt="logo GenTree" />
       <h1>GenTree</h1>
     </div>
     <SearchBar />
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import Logo from '/assets/tree.png'
   import SearchBar from './searchBar.vue'
 
   const { state } = useAppStore()

@@ -43,14 +43,17 @@ export class Person {
       })
     } else {
       const familyIndex = useFamily.getIndex()
+      console.log(state.AllFamilies[familyIndex])
       if (
         state.AllFamilies[familyIndex] !== null &&
         state.AllFamilies[familyIndex] !== undefined &&
-        state.AllFamilies[familyIndex].family !== null
+        state.AllFamilies[familyIndex]!.family !== null
       ) {
         /* Set the person as the parent of the family */
-        this.data.children.push(state.AllFamilies[familyIndex].family)
-        state.AllFamilies[familyIndex].family = this.data
+        this.data.children.push(state.AllFamilies[familyIndex]!.family!)
+        state.AllFamilies[familyIndex]!.family = this.data
+      }else {
+        state.AllFamilies[familyIndex]!.family = this.data
       }
     }
     /* Set the person's icon */
@@ -63,7 +66,7 @@ export class Person {
     /* Find the person in the family tree */
     this.getPerson(state.AllFamilies[familyID]?.family!, this.key).then((person) => {
       if (person !== null) {
-        person = this.data
+        Object.assign(person, this.data)
       }
       /* Set the person's icon */
       set(this.data.id + '-photo', icons.person, icons.spouse)
@@ -93,6 +96,7 @@ export class Person {
   private resetValues() {
     state.window = null
     state.selectedPersonData = null
+    state.addOptionPerson = null
     state.personForm = {
       icon: '',
       name: '',

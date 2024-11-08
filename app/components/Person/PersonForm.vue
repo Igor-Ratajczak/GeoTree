@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
   import { watch } from 'vue'
-  import defaultUserIcon from '/assets/defaultUserIcon.svg'
+  import defaultUserIcon from '/assets/defaultUserIcon.png'
 
   const { state } = useAppStore()
 
@@ -49,7 +49,7 @@
   // it's important!!! PersonFrom show icon person or person spouse
   const dataIcon = props.type === 'spouse' ? state.personForm?.spouse : state.personForm
 
-  const icon = ref(props.option === 'edit' ? dataIcon?.icon : defaultUserIcon) // icon to show in form
+  const icon = ref(props.option === 'edit' ? dataIcon?.icon ? dataIcon?.icon : defaultUserIcon : defaultUserIcon) // icon to show in form
   const name = ref(props.option === 'edit' ? data?.name : '') // name to show in form
   const birth = ref(props.option === 'edit' ? data?.birth : null) // birth to show in form
   const death = ref(props.option === 'edit' ? data?.death : null) // death to show in form
@@ -103,7 +103,7 @@
             icon: newValue[0] || '',
             name: newValue[1] || '',
             birth: newValue[2] || null,
-            death: newValue[3] || null,
+            death: newValue[3] || '',
             description: newValue[4] || '',
             userData: newValue[5] as UserData[],
           }
@@ -112,7 +112,7 @@
             icon: newValue[0] || '',
             name: newValue[1] || '',
             birth: newValue[2] || null,
-            death: newValue[3] || null,
+            death: newValue[3] || '',
             description: newValue[4] || '',
             userData: newValue[5] as UserData[],
             hasSpouse: state.personForm.hasSpouse,
