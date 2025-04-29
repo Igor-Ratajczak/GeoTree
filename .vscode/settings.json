@@ -78,7 +78,7 @@
     "scss",
     "vue"
   ],
-  "editor.defaultColorDecorators": true,
+  "editor.defaultColorDecorators": "auto",
   "editor.colorDecoratorsLimit": 5000,
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
